@@ -41,8 +41,7 @@ namespace
 	};
 }
 
-DualShockController::DualShockController():
-	m_oContinueDestructionSemaphore{0}
+DualShockController::DualShockController() : m_pThread(nullptr)
 {
 	m_nConnectedDeviceID = -1;
 }
@@ -50,8 +49,11 @@ DualShockController::DualShockController():
 DualShockController::~DualShockController()
 {
 	// stop thread function and wait for it to finish
-	m_bContinueExecution = false;
-	m_oContinueDestructionSemaphore.acquire();
+	if(m_pThread != nullptr)
+	{
+		m_bContinueExecution = false;
+		m_pThread->join();
+	}
 
 	JslDisconnectAndDisposeAll();
 }
@@ -76,7 +78,7 @@ bool DualShockController::ConnectToDevice()
 			{
 				m_nConnectedDeviceID = pDeviceHandleArray.get()[i];
 				
-				std::thread(_CaptureEvents);
+				m_pThread.reset(new std::thread(&DualShockController::_CaptureEvents, this));
 				return true;
 			}
 		}
@@ -94,6 +96,4 @@ void DualShockController::_CaptureEvents()
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS));
 	}
-
-	m_oContinueDestructionSemaphore.release();
 }

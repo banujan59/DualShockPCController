@@ -1,14 +1,13 @@
 #pragma once
 
 #include <thread>
-#include <semaphore>
 
 class DualShockController
 {
 private:
 	int m_nConnectedDeviceID;
 	bool m_bContinueExecution;
-	std::binary_semaphore oContinueDestructionSemaphore;
+	std::unique_ptr<std::thread> m_pThread;
 
 	void _CaptureEvents();
 

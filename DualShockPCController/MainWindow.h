@@ -9,9 +9,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(DualShockController& oDualShockController, QWidget *parent = Q_NULLPTR);
+    MainWindow(DualShockController* pDualShockController, QWidget *parent = Q_NULLPTR);
 
 private:
     Ui::MainWindowClass ui;
-    DualShockController m_oDualShockController;
+    DualShockController* m_pDualShockController;
 };
