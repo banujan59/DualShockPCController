@@ -11,3 +11,7 @@ struct MousePosition {
 
 MousePosition GetCurrentMousePosition();
 void SetNewMousePosition(MousePosition& oNewPosition);
+void TriggerMouseLeftDown();
+void TriggerMouseLeftUp();
+void TriggerMouseRightDown();
+void TriggerMouseRightUp();

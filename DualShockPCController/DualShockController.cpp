@@ -93,6 +93,9 @@ bool DualShockController::ConnectToDevice()
 
 void DualShockController::_CaptureEvents()
 {
+	bool bMouseLeftDown = false;
+	bool bMouseRightDown = false;
+
 	while(m_bContinueThreadExecution)
 	{
 		JOY_SHOCK_STATE joyState = JslGetSimpleState(m_nConnectedDeviceID);
@@ -102,6 +105,31 @@ void DualShockController::_CaptureEvents()
 		oMousePosition.x = oMousePosition.x + static_cast<long>(m_mouseAccelerationFactor * joyState.stickLX);
 		oMousePosition.y = oMousePosition.y - static_cast<long>(m_mouseAccelerationFactor * joyState.stickLY); // y axis is inverted
 		SetNewMousePosition(oMousePosition);
+
+		// Update mouse left/right click
+		if (!bMouseLeftDown && joyState.buttons == DualShock4Buttons::L3)
+		{
+			TriggerMouseLeftDown();
+			bMouseLeftDown = true;
+		}
+
+		else if (bMouseLeftDown && joyState.buttons == DualShock4Buttons::NO_BUTTONS)
+		{
+			TriggerMouseLeftUp();
+			bMouseLeftDown = false;
+		}
+
+		if (!bMouseRightDown && joyState.buttons == DualShock4Buttons::R3)
+		{
+			TriggerMouseRightDown();
+			bMouseRightDown = true;
+		}
+
+		else if (bMouseRightDown && joyState.buttons == DualShock4Buttons::NO_BUTTONS)
+		{
+			TriggerMouseRightUp();
+			bMouseRightDown = false;
+		}
 
 		std::this_thread::sleep_for(std::chrono::microseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS));
 	}
