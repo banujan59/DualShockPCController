@@ -15,3 +15,5 @@ void TriggerMouseLeftDown();
 void TriggerMouseLeftUp();
 void TriggerMouseRightDown();
 void TriggerMouseRightUp();
+void TriggerVerticalScroll(float dScrollValue);
+void TriggerHorizontalScroll(float dScrollValue);

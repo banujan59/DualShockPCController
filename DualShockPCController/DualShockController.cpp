@@ -131,6 +131,10 @@ void DualShockController::_CaptureEvents()
 			bMouseRightDown = false;
 		}
 
+		// update scrollwheel
+		TriggerVerticalScroll(joyState.stickRY);
+		TriggerHorizontalScroll(joyState.stickRX);
+
 		std::this_thread::sleep_for(std::chrono::microseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS));
 	}
 }

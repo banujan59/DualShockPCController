@@ -54,3 +54,14 @@ void TriggerMouseRightUp()
 	Inputs[0].mi.dwFlags = MOUSEEVENTF_RIGHTUP;
 	SendInput(1, Inputs, sizeof(INPUT));
 }
+
+void TriggerVerticalScroll(float dScrollValue)
+{
+	mouse_event(MOUSEEVENTF_WHEEL, 0, 0, static_cast<int>(25 * dScrollValue), 0);
+}
+
+void TriggerHorizontalScroll(float dScrollValue)
+{
+	mouse_event(MOUSEEVENTF_HWHEEL, 0, 0, static_cast<int>(25 * dScrollValue), 0);
+}
+
