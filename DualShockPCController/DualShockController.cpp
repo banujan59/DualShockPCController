@@ -7,6 +7,8 @@
 namespace 
 {
 	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS = 10000;
+	constexpr int MAX_MOUSE_SENSITIVITY = 40;
+	constexpr int MIN_MOUSE_SENSITIVITY = 5;
 
 	enum ControllerType
 	{
@@ -42,7 +44,10 @@ namespace
 	};
 }
 
-DualShockController::DualShockController() : m_bContinueThreadExecution(false), m_pThread(nullptr)
+DualShockController::DualShockController() :
+m_bContinueThreadExecution(false),
+m_pThread(nullptr),
+m_mouseAccelerationFactor(20)
 {
 	m_nConnectedDeviceID = -1;
 }
@@ -102,8 +107,8 @@ void DualShockController::_CaptureEvents()
 
 		// Update mouse position
 		MousePosition oMousePosition = GetCurrentMousePosition();
-		oMousePosition.x = oMousePosition.x + static_cast<long>(m_mouseAccelerationFactor * joyState.stickLX);
-		oMousePosition.y = oMousePosition.y - static_cast<long>(m_mouseAccelerationFactor * joyState.stickLY); // y axis is inverted
+		oMousePosition.x = oMousePosition.x + static_cast<long>(static_cast<float>(m_mouseAccelerationFactor) * joyState.stickLX);
+		oMousePosition.y = oMousePosition.y - static_cast<long>(static_cast<float>(m_mouseAccelerationFactor) * joyState.stickLY);
 		SetNewMousePosition(oMousePosition);
 
 		// Update mouse left/right click
@@ -137,4 +142,24 @@ void DualShockController::_CaptureEvents()
 
 		std::this_thread::sleep_for(std::chrono::microseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS));
 	}
+}
+
+int DualShockController::GetMouseAccelerationFactor()
+{
+	return m_mouseAccelerationFactor;
+}
+
+void DualShockController::SetMouseAccelerationFactor(int newFactor)
+{
+	m_mouseAccelerationFactor = newFactor;
+}
+
+int DualShockController::GetMaxMouseSensitivityFactor()
+{
+	return MAX_MOUSE_SENSITIVITY;
+}
+
+int DualShockController::GetMinMouseSensitivityFactor()
+{
+	return MIN_MOUSE_SENSITIVITY;
 }
