@@ -42,7 +42,7 @@ namespace
 	};
 }
 
-DualShockController::DualShockController() : m_pThread(nullptr), m_bContinueThreadExecution(false)
+DualShockController::DualShockController() : m_bContinueThreadExecution(false), m_pThread(nullptr)
 {
 	m_nConnectedDeviceID = -1;
 }
@@ -84,11 +84,11 @@ bool DualShockController::ConnectToDevice()
 				return true;
 			}
 		}
-
-		std::cerr << "Could not detect a Dualshock 4 device" << std::endl;
-		JslDisconnectAndDisposeAll();
-		return false;
 	}
+
+	std::cerr << "Could not detect a Dualshock 4 device" << std::endl;
+	JslDisconnectAndDisposeAll();
+	return false;
 }
 
 void DualShockController::_CaptureEvents()
