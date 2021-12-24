@@ -5,6 +5,8 @@
 
 namespace 
 {
+	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 100;
+
 	enum ControllerType
 	{
 		UnknownController,
@@ -39,13 +41,18 @@ namespace
 	};
 }
 
-DualShockController::DualShockController()
+DualShockController::DualShockController():
+	m_oContinueDestructionSemaphore{0}
 {
 	m_nConnectedDeviceID = -1;
 }
 
 DualShockController::~DualShockController()
 {
+	// stop thread function and wait for it to finish
+	m_bContinueExecution = false;
+	m_oContinueDestructionSemaphore.acquire();
+
 	JslDisconnectAndDisposeAll();
 }
 
@@ -68,6 +75,8 @@ bool DualShockController::ConnectToDevice()
 			if (type == ControllerType::DualShock4)
 			{
 				m_nConnectedDeviceID = pDeviceHandleArray.get()[i];
+				
+				std::thread(_CaptureEvents);
 				return true;
 			}
 		}
@@ -76,4 +85,15 @@ bool DualShockController::ConnectToDevice()
 		JslDisconnectAndDisposeAll();
 		return false;
 	}
+}
+
+void DualShockController::_CaptureEvents()
+{
+	m_bContinueExecution = true;
+	while(m_bContinueExecution)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS));
+	}
+
+	m_oContinueDestructionSemaphore.release();
 }
