@@ -1,11 +1,12 @@
 #include "DualShockController.h"
 #include "JoyShockLibrary.h"
+#include "OSHelper.h"
 
 #include <iostream>
 
 namespace 
 {
-	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 100;
+	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS = 10000;
 
 	enum ControllerType
 	{
@@ -41,7 +42,7 @@ namespace
 	};
 }
 
-DualShockController::DualShockController() : m_pThread(nullptr)
+DualShockController::DualShockController() : m_pThread(nullptr), m_bContinueThreadExecution(false)
 {
 	m_nConnectedDeviceID = -1;
 }
@@ -51,7 +52,7 @@ DualShockController::~DualShockController()
 	// stop thread function and wait for it to finish
 	if(m_pThread != nullptr)
 	{
-		m_bContinueExecution = false;
+		m_bContinueThreadExecution = false;
 		m_pThread->join();
 	}
 
@@ -77,7 +78,8 @@ bool DualShockController::ConnectToDevice()
 			if (type == ControllerType::DualShock4)
 			{
 				m_nConnectedDeviceID = pDeviceHandleArray.get()[i];
-				
+
+				m_bContinueThreadExecution = true;
 				m_pThread.reset(new std::thread(&DualShockController::_CaptureEvents, this));
 				return true;
 			}
@@ -91,9 +93,16 @@ bool DualShockController::ConnectToDevice()
 
 void DualShockController::_CaptureEvents()
 {
-	m_bContinueExecution = true;
-	while(m_bContinueExecution)
+	while(m_bContinueThreadExecution)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS));
+		JOY_SHOCK_STATE joyState = JslGetSimpleState(m_nConnectedDeviceID);
+
+		// Update mouse position
+		MousePosition oMousePosition = GetCurrentMousePosition();
+		oMousePosition.x = oMousePosition.x + static_cast<long>(m_mouseAccelerationFactor * joyState.stickLX);
+		oMousePosition.y = oMousePosition.y - static_cast<long>(m_mouseAccelerationFactor * joyState.stickLY); // y axis is inverted
+		SetNewMousePosition(oMousePosition);
+
+		std::this_thread::sleep_for(std::chrono::microseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS));
 	}
 }
