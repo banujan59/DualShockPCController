@@ -107,7 +107,7 @@ void DualShockController::_CaptureEvents()
 		SetNewMousePosition(oMousePosition);
 
 		// Update mouse left/right click
-		if (!bMouseLeftDown && joyState.buttons == DualShock4Buttons::L3)
+		if (!bMouseLeftDown && (joyState.buttons == DualShock4Buttons::L3 || joyState.buttons == DualShock4Buttons::X))
 		{
 			TriggerMouseLeftDown();
 			bMouseLeftDown = true;
