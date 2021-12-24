@@ -1,10 +1,13 @@
 #include "DualShockController.h"
 #include "JoyShockLibrary.h"
+#include "OSHelper.h"
 
 #include <iostream>
 
 namespace 
 {
+	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS = 10000;
+
 	enum ControllerType
 	{
 		UnknownController,
@@ -39,13 +42,20 @@ namespace
 	};
 }
 
-DualShockController::DualShockController()
+DualShockController::DualShockController() : m_pThread(nullptr), m_bContinueThreadExecution(false)
 {
 	m_nConnectedDeviceID = -1;
 }
 
 DualShockController::~DualShockController()
 {
+	// stop thread function and wait for it to finish
+	if(m_pThread != nullptr)
+	{
+		m_bContinueThreadExecution = false;
+		m_pThread->join();
+	}
+
 	JslDisconnectAndDisposeAll();
 }
 
@@ -68,6 +78,9 @@ bool DualShockController::ConnectToDevice()
 			if (type == ControllerType::DualShock4)
 			{
 				m_nConnectedDeviceID = pDeviceHandleArray.get()[i];
+
+				m_bContinueThreadExecution = true;
+				m_pThread.reset(new std::thread(&DualShockController::_CaptureEvents, this));
 				return true;
 			}
 		}
@@ -75,5 +88,53 @@ bool DualShockController::ConnectToDevice()
 		std::cerr << "Could not detect a Dualshock 4 device" << std::endl;
 		JslDisconnectAndDisposeAll();
 		return false;
+	}
+}
+
+void DualShockController::_CaptureEvents()
+{
+	bool bMouseLeftDown = false;
+	bool bMouseRightDown = false;
+
+	while(m_bContinueThreadExecution)
+	{
+		JOY_SHOCK_STATE joyState = JslGetSimpleState(m_nConnectedDeviceID);
+
+		// Update mouse position
+		MousePosition oMousePosition = GetCurrentMousePosition();
+		oMousePosition.x = oMousePosition.x + static_cast<long>(m_mouseAccelerationFactor * joyState.stickLX);
+		oMousePosition.y = oMousePosition.y - static_cast<long>(m_mouseAccelerationFactor * joyState.stickLY); // y axis is inverted
+		SetNewMousePosition(oMousePosition);
+
+		// Update mouse left/right click
+		if (!bMouseLeftDown && (joyState.buttons == DualShock4Buttons::L3 || joyState.buttons == DualShock4Buttons::X))
+		{
+			TriggerMouseLeftDown();
+			bMouseLeftDown = true;
+		}
+
+		else if (bMouseLeftDown && joyState.buttons == DualShock4Buttons::NO_BUTTONS)
+		{
+			TriggerMouseLeftUp();
+			bMouseLeftDown = false;
+		}
+
+		if (!bMouseRightDown && joyState.buttons == DualShock4Buttons::R3)
+		{
+			TriggerMouseRightDown();
+			bMouseRightDown = true;
+		}
+
+		else if (bMouseRightDown && joyState.buttons == DualShock4Buttons::NO_BUTTONS)
+		{
+			TriggerMouseRightUp();
+			bMouseRightDown = false;
+		}
+
+		// update scrollwheel
+		TriggerVerticalScroll(joyState.stickRY);
+		TriggerHorizontalScroll(joyState.stickRX);
+
+		std::this_thread::sleep_for(std::chrono::microseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS));
 	}
 }
