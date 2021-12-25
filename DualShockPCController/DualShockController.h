@@ -9,7 +9,7 @@ private:
 	bool m_bContinueThreadExecution;
 	std::unique_ptr<std::thread> m_pThread;
 
-	float m_mouseAccelerationFactor = 20.0f;
+	int m_mouseAccelerationFactor;
 
 	void _CaptureEvents();
 
@@ -17,5 +17,11 @@ public:
 	DualShockController();
 	~DualShockController();
 	bool ConnectToDevice();
+
+	int GetMouseAccelerationFactor();
+	void SetMouseAccelerationFactor(int newFactor);
+
+	static int GetMaxMouseSensitivityFactor();
+	static int GetMinMouseSensitivityFactor();
 };
 
