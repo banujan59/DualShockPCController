@@ -1,9 +1,10 @@
 #pragma once
 
-#include <thread>
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
+
 #include "DualShockController.h"
+#include "MouseSensitivitySettings.h"
 
 class MainWindow : public QMainWindow
 {
@@ -12,19 +13,14 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(DualShockController* pDualShockController, QWidget *parent = Q_NULLPTR);
 
-private slots:
-    void MouseSensitivityChanged(int newValue);
-    void TestMouseSensitivityFor5Seconds();
-    void TestMouseSensitivityDoneSlot();
-
 signals:
-    void updateTestButtonTextSignal(QString text);
-	void TestMouseSensitivityDoneSignal();
+    void WidgetEnableStateChangeSignal(bool disableState);
+
+private slots:
+    void HandleWidgetEnableStateChange(bool disableState);
 
 private:
     Ui::MainWindowClass ui;
-    DualShockController* m_pDualShockController;
-    std::unique_ptr<std::thread> m_testMouseSensitivityThread;
-
-    void SetWidgetEnableState(bool disableState);
+	DualShockController* m_pDualShockController;
+    MouseSensitivitySettings m_mouseSensitivitySettings;
 };

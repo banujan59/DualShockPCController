@@ -17,26 +17,6 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="2">
-       <widget class="QLabel" name="mouseSensitivityLabel">
-        <property name="text">
-         <string>Mouse Sensitivity: </string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item row="0" column="0">
        <layout class="QFormLayout" name="formLayout">
         <item row="0" column="0">
@@ -55,19 +35,18 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="2" colspan="2">
-       <widget class="QSlider" name="mouseSensitivitySlider">
+      <item row="0" column="2">
+       <spacer name="verticalSpacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Vertical</enum>
         </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QPushButton" name="applyMouseSensitivity">
-        <property name="text">
-         <string>Apply</string>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
         </property>
-       </widget>
+       </spacer>
       </item>
       <item row="1" column="1">
        <spacer name="horizontalSpacer">
@@ -81,16 +60,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="3" column="2">
-       <widget class="QPushButton" name="testMouseSensitivityButton">
-        <property name="text">
-         <string>Test for 5 seconds</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QSpinBox" name="mouseSensitivitySpinBox"/>
       </item>
      </layout>
     </item>

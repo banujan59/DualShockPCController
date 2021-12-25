@@ -99,6 +99,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MouseSensitivitySettings.cpp" />
     <ClCompile Include="OSHelper.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="MainWindow.ui" />
@@ -106,10 +107,12 @@
     <ClCompile Include="DualShockController.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="MouseSensitivitySettings.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DualShockController.h" />
     <ClInclude Include="JoyShockLibrary.h" />
+    <QtMoc Include="MouseSensitivitySettings.h" />
     <ClInclude Include="OSHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
