@@ -172,6 +172,16 @@ void DualShockController::_CaptureEvents()
 			TriggerDownArrowKey();
 		}
 
+		else if (joyState.buttons == DualShock4Buttons::L1 && m_previousIterationButtonDown != DualShock4Buttons::L1)
+		{
+			TriggerNavigationBack();
+		}
+
+		else if (joyState.buttons == DualShock4Buttons::R1 && m_previousIterationButtonDown != DualShock4Buttons::R1)
+		{
+			TriggerNavigationForward();
+		}
+
 		// update scrollwheel
 		TriggerVerticalScroll(joyState.stickRY);
 		TriggerHorizontalScroll(joyState.stickRX);

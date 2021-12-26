@@ -25,3 +25,6 @@ void TriggerLeftArrowKey();
 void TriggerRightArrowKey();
 void TriggerUpArrowKey();
 void TriggerDownArrowKey();
+
+void TriggerNavigationBack();
+void TriggerNavigationForward();
