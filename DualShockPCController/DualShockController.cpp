@@ -152,6 +152,26 @@ void DualShockController::_CaptureEvents()
 			CloseActiveWindow();
 		}
 
+		else if(joyState.buttons == DualShock4Buttons::LEFT_DPAD && m_previousIterationButtonDown != DualShock4Buttons::LEFT_DPAD)
+		{
+			TriggerLeftArrowKey();
+		}
+
+		else if (joyState.buttons == DualShock4Buttons::RIGHT_DPAD && m_previousIterationButtonDown != DualShock4Buttons::RIGHT_DPAD)
+		{
+			TriggerRightArrowKey();
+		}
+
+		else if (joyState.buttons == DualShock4Buttons::UP_DPAD && m_previousIterationButtonDown != DualShock4Buttons::UP_DPAD)
+		{
+			TriggerUpArrowKey();
+		}
+
+		else if (joyState.buttons == DualShock4Buttons::DOWN_DPAD && m_previousIterationButtonDown != DualShock4Buttons::DOWN_DPAD)
+		{
+			TriggerDownArrowKey();
+		}
+
 		// update scrollwheel
 		TriggerVerticalScroll(joyState.stickRY);
 		TriggerHorizontalScroll(joyState.stickRX);

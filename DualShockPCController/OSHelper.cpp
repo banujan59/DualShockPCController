@@ -106,3 +106,40 @@ void CloseActiveWindow()
 	HWND windowHandler = GetForegroundWindow();
 	PostMessage(windowHandler, WM_CLOSE, 0, 0);
 }
+
+void TriggerLeftArrowKey()
+{
+	INPUT Inputs[1];
+	Inputs[0].type = INPUT_KEYBOARD;
+	Inputs[0].ki.wVk = VK_LEFT;
+	Inputs[0].ki.dwFlags = WM_KEYUP;
+
+	SendInput(1, Inputs, sizeof(INPUT));
+}
+
+void TriggerRightArrowKey()
+{
+	INPUT Inputs[1];
+	Inputs[0].type = INPUT_KEYBOARD;
+	Inputs[0].ki.wVk = VK_RIGHT;
+	Inputs[0].ki.dwFlags = WM_KEYUP;
+	SendInput(1, Inputs, sizeof(INPUT));
+}
+
+void TriggerUpArrowKey()
+{
+	INPUT Inputs[1];
+	Inputs[0].type = INPUT_KEYBOARD;
+	Inputs[0].ki.wVk = VK_UP;
+	Inputs[0].ki.dwFlags = WM_KEYUP;
+	SendInput(1, Inputs, sizeof(INPUT));
+}
+
+void TriggerDownArrowKey()
+{
+	INPUT Inputs[1];
+	Inputs[0].type = INPUT_KEYBOARD;
+	Inputs[0].ki.wVk = VK_DOWN;
+	Inputs[0].ki.dwFlags = WM_KEYUP;
+	SendInput(1, Inputs, sizeof(INPUT));
+}
