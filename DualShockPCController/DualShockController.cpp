@@ -36,7 +36,7 @@ namespace
 		L2 = 0x00400,
 		R2 = 0x00800,
 		X = 0x01000,
-		CRICLE = 0x02000,
+		CIRCLE = 0x02000,
 		SQUARE = 0x04000,
 		TRIANGLE = 0x08000,
 		PS_BUTTON = 0x10000,
@@ -48,7 +48,7 @@ DualShockController::DualShockController() :
 m_bContinueThreadExecution(false),
 m_pThread(nullptr),
 m_mouseAccelerationFactor(20),
-m_currentDS4ButtonDown(0)
+m_previousIterationButtonDown(0)
 {
 	m_nConnectedDeviceID = -1;
 }
@@ -137,21 +137,26 @@ void DualShockController::_CaptureEvents()
 			bMouseRightDown = false;
 		}
 
-		if(joyState.buttons == DualShock4Buttons::SQUARE && m_currentDS4ButtonDown != DualShock4Buttons::SQUARE)
+		if(joyState.buttons == DualShock4Buttons::SQUARE && m_previousIterationButtonDown != DualShock4Buttons::SQUARE)
 		{
 			ToggleActiveWindowMaximized();
 		}
 
-		else if(joyState.buttons == DualShock4Buttons::TRIANGLE && m_currentDS4ButtonDown != DualShock4Buttons::TRIANGLE)
+		else if(joyState.buttons == DualShock4Buttons::TRIANGLE && m_previousIterationButtonDown != DualShock4Buttons::TRIANGLE)
 		{
 			ToggleActiveWindowMinimized();
+		}
+
+		else if(joyState.buttons == DualShock4Buttons::CIRCLE && m_previousIterationButtonDown != DualShock4Buttons::CIRCLE)
+		{
+			CloseActiveWindow();
 		}
 
 		// update scrollwheel
 		TriggerVerticalScroll(joyState.stickRY);
 		TriggerHorizontalScroll(joyState.stickRX);
 
-		m_currentDS4ButtonDown = joyState.buttons;
+		m_previousIterationButtonDown = joyState.buttons;
 
 		std::this_thread::sleep_for(std::chrono::microseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS));
 	}

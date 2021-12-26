@@ -100,3 +100,9 @@ void ToggleActiveWindowMinimized()
 		}
 	}
 }
+
+void CloseActiveWindow()
+{
+	HWND windowHandler = GetForegroundWindow();
+	PostMessage(windowHandler, WM_CLOSE, 0, 0);
+}

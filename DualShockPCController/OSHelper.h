@@ -19,3 +19,4 @@ void TriggerVerticalScroll(float dScrollValue);
 void TriggerHorizontalScroll(float dScrollValue);
 void ToggleActiveWindowMaximized();
 void ToggleActiveWindowMinimized();
+void CloseActiveWindow();

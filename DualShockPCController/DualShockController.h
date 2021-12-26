@@ -10,7 +10,7 @@ private:
 	std::unique_ptr<std::thread> m_pThread;
 
 	int m_mouseAccelerationFactor;
-	int m_currentDS4ButtonDown;
+	int m_previousIterationButtonDown;
 
 	void _CaptureEvents();
 
