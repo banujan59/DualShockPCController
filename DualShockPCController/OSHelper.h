@@ -17,3 +17,5 @@ void TriggerMouseRightDown();
 void TriggerMouseRightUp();
 void TriggerVerticalScroll(float dScrollValue);
 void TriggerHorizontalScroll(float dScrollValue);
+void ToggleActiveWindowMaximized();
+void ToggleActiveWindowMinimized();

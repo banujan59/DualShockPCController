@@ -47,7 +47,8 @@ namespace
 DualShockController::DualShockController() :
 m_bContinueThreadExecution(false),
 m_pThread(nullptr),
-m_mouseAccelerationFactor(20)
+m_mouseAccelerationFactor(20),
+m_currentDS4ButtonDown(0)
 {
 	m_nConnectedDeviceID = -1;
 }
@@ -136,9 +137,21 @@ void DualShockController::_CaptureEvents()
 			bMouseRightDown = false;
 		}
 
+		if(joyState.buttons == DualShock4Buttons::SQUARE && m_currentDS4ButtonDown != DualShock4Buttons::SQUARE)
+		{
+			ToggleActiveWindowMaximized();
+		}
+
+		else if(joyState.buttons == DualShock4Buttons::TRIANGLE && m_currentDS4ButtonDown != DualShock4Buttons::TRIANGLE)
+		{
+			ToggleActiveWindowMinimized();
+		}
+
 		// update scrollwheel
 		TriggerVerticalScroll(joyState.stickRY);
 		TriggerHorizontalScroll(joyState.stickRX);
+
+		m_currentDS4ButtonDown = joyState.buttons;
 
 		std::this_thread::sleep_for(std::chrono::microseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS));
 	}

@@ -65,3 +65,38 @@ void TriggerHorizontalScroll(float dScrollValue)
 	mouse_event(MOUSEEVENTF_HWHEEL, 0, 0, static_cast<int>(25 * dScrollValue), 0);
 }
 
+void ToggleActiveWindowMaximized()
+{
+	HWND windowHandler = GetForegroundWindow();
+	WINDOWPLACEMENT windowPlacement;
+	if (GetWindowPlacement(windowHandler, &windowPlacement))
+	{
+		if (windowPlacement.showCmd == SW_SHOWNORMAL)
+		{
+			ShowWindow(windowHandler, SW_MAXIMIZE);
+		}
+
+		else if (windowPlacement.showCmd == SW_SHOWMAXIMIZED || windowPlacement.showCmd == SW_SHOWMINIMIZED)
+		{
+			ShowWindow(windowHandler, SW_RESTORE);
+		}
+	}
+}
+
+void ToggleActiveWindowMinimized()
+{
+	HWND windowHandler = GetForegroundWindow();
+	WINDOWPLACEMENT windowPlacement;
+	if (GetWindowPlacement(windowHandler, &windowPlacement))
+	{
+		if (windowPlacement.showCmd == SW_SHOWMINIMIZED)
+		{
+			ShowWindow(windowHandler, SW_RESTORE);
+		}
+
+		else if (windowPlacement.showCmd == SW_SHOWNORMAL || windowPlacement.showCmd == SW_SHOWMAXIMIZED)
+		{
+			ShowWindow(windowHandler, SW_MINIMIZE);
+		}
+	}
+}
