@@ -6,7 +6,7 @@
 
 namespace 
 {
-	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS = 10000;
+	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 10;
 	constexpr int MAX_MOUSE_SENSITIVITY = 40;
 	constexpr int MIN_MOUSE_SENSITIVITY = 5;
 
@@ -19,38 +19,21 @@ namespace
 		DualShock4,
 		DualSense
 	};
-
-	enum DualShock4Buttons
-	{
-		NO_BUTTONS = 0x0,
-		UP_DPAD = 0x00001,
-		DOWN_DPAD = 0x00002,
-		LEFT_DPAD = 0x00004,
-		RIGHT_DPAD = 0x00008,
-		OPTIONS = 0x00010,
-		SHARE = 0x00020,
-		L3 = 0x00040,
-		R3 = 0x00080,
-		L1 = 0x00100,
-		R1 = 0x00200,
-		L2 = 0x00400,
-		R2 = 0x00800,
-		X = 0x01000,
-		CIRCLE = 0x02000,
-		SQUARE = 0x04000,
-		TRIANGLE = 0x08000,
-		PS_BUTTON = 0x10000,
-		CENTER_TOUCH_BAR = 0x20000
-	};
 }
 
 DualShockController::DualShockController() :
-m_bContinueThreadExecution(false),
-m_pThread(nullptr),
-m_mouseAccelerationFactor(20),
-m_previousIterationButtonDown(0)
+	m_nConnectedDeviceID(-1),
+	m_bContinueThreadExecution(false),
+	m_pThread(nullptr),
+	m_mouseAccelerationFactor(20),
+	m_previousIterationButtonDown(0),
+	m_timeButtonSpentDown(0)
 {
-	m_nConnectedDeviceID = -1;
+	// Load list of available button handlers
+	m_availableButtonHandlers.push_back(DefaultConfigButtonHandler());
+
+	// Load the default button handler on startup
+	m_currentButtonHandler = &m_availableButtonHandlers[0];
 }
 
 DualShockController::~DualShockController()
@@ -99,96 +82,35 @@ bool DualShockController::ConnectToDevice()
 
 void DualShockController::_CaptureEvents()
 {
-	bool bMouseLeftDown = false;
-	bool bMouseRightDown = false;
-
 	while(m_bContinueThreadExecution)
 	{
 		JOY_SHOCK_STATE joyState = JslGetSimpleState(m_nConnectedDeviceID);
-
+		
 		// Update mouse position
 		MousePosition oMousePosition = GetCurrentMousePosition();
 		oMousePosition.x = oMousePosition.x + static_cast<long>(static_cast<float>(m_mouseAccelerationFactor) * joyState.stickLX);
 		oMousePosition.y = oMousePosition.y - static_cast<long>(static_cast<float>(m_mouseAccelerationFactor) * joyState.stickLY);
 		SetNewMousePosition(oMousePosition);
 
-		// Update mouse left/right click
-		if (!bMouseLeftDown && (joyState.buttons == DualShock4Buttons::L3 || joyState.buttons == DualShock4Buttons::X))
-		{
-			TriggerMouseLeftDown();
-			bMouseLeftDown = true;
-		}
-
-		else if (bMouseLeftDown && joyState.buttons == DualShock4Buttons::NO_BUTTONS)
-		{
-			TriggerMouseLeftUp();
-			bMouseLeftDown = false;
-		}
-
-		if (!bMouseRightDown && joyState.buttons == DualShock4Buttons::R3)
-		{
-			TriggerMouseRightDown();
-			bMouseRightDown = true;
-		}
-
-		else if (bMouseRightDown && joyState.buttons == DualShock4Buttons::NO_BUTTONS)
-		{
-			TriggerMouseRightUp();
-			bMouseRightDown = false;
-		}
-
-		if(joyState.buttons == DualShock4Buttons::SQUARE && m_previousIterationButtonDown != DualShock4Buttons::SQUARE)
-		{
-			ToggleActiveWindowMaximized();
-		}
-
-		else if(joyState.buttons == DualShock4Buttons::TRIANGLE && m_previousIterationButtonDown != DualShock4Buttons::TRIANGLE)
-		{
-			ToggleActiveWindowMinimized();
-		}
-
-		else if(joyState.buttons == DualShock4Buttons::CIRCLE && m_previousIterationButtonDown != DualShock4Buttons::CIRCLE)
-		{
-			CloseActiveWindow();
-		}
-
-		else if(joyState.buttons == DualShock4Buttons::LEFT_DPAD && m_previousIterationButtonDown != DualShock4Buttons::LEFT_DPAD)
-		{
-			TriggerLeftArrowKey();
-		}
-
-		else if (joyState.buttons == DualShock4Buttons::RIGHT_DPAD && m_previousIterationButtonDown != DualShock4Buttons::RIGHT_DPAD)
-		{
-			TriggerRightArrowKey();
-		}
-
-		else if (joyState.buttons == DualShock4Buttons::UP_DPAD && m_previousIterationButtonDown != DualShock4Buttons::UP_DPAD)
-		{
-			TriggerUpArrowKey();
-		}
-
-		else if (joyState.buttons == DualShock4Buttons::DOWN_DPAD && m_previousIterationButtonDown != DualShock4Buttons::DOWN_DPAD)
-		{
-			TriggerDownArrowKey();
-		}
-
-		else if (joyState.buttons == DualShock4Buttons::L1 && m_previousIterationButtonDown != DualShock4Buttons::L1)
-		{
-			TriggerNavigationBack();
-		}
-
-		else if (joyState.buttons == DualShock4Buttons::R1 && m_previousIterationButtonDown != DualShock4Buttons::R1)
-		{
-			TriggerNavigationForward();
-		}
-
 		// update scrollwheel
 		TriggerVerticalScroll(joyState.stickRY);
 		TriggerHorizontalScroll(joyState.stickRX);
 
-		m_previousIterationButtonDown = joyState.buttons;
 
-		std::this_thread::sleep_for(std::chrono::microseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS));
+		if(m_previousIterationButtonDown != joyState.buttons)
+		{
+			m_currentButtonHandler->OnKeyUp(m_previousIterationButtonDown, m_timeButtonSpentDown);
+			m_timeButtonSpentDown = 0;
+			m_currentButtonHandler->OnKeyDown(joyState.buttons);
+		}
+
+		else
+		{
+			m_timeButtonSpentDown += THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS;
+		}
+
+		m_previousIterationButtonDown = joyState.buttons;
+		std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS));
 	}
 }
 

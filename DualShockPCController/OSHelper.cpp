@@ -5,6 +5,12 @@
  * Implementation for Windows.
  */
 
+namespace
+{
+	bool mouseLeftDown = false;
+	bool mouseRightDown = false;
+}
+
 MousePosition GetCurrentMousePosition()
 {
 	MousePosition oMousePosition;
@@ -25,34 +31,54 @@ void SetNewMousePosition(MousePosition& oNewPosition)
 
 void TriggerMouseLeftDown()
 {
-	INPUT Inputs[1];
-	Inputs[0].type = INPUT_MOUSE;
-	Inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-	SendInput(1, Inputs, sizeof(INPUT));
+	if(!mouseLeftDown)
+	{
+		INPUT Inputs[1];
+		Inputs[0].type = INPUT_MOUSE;
+		Inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+		SendInput(1, Inputs, sizeof(INPUT));
+
+		mouseLeftDown = true;
+	}
 }
 
 void TriggerMouseLeftUp()
 {
-	INPUT Inputs[1];
-	Inputs[0].type = INPUT_MOUSE;
-	Inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTUP;
-	SendInput(1, Inputs, sizeof(INPUT));
+	if(mouseLeftDown)
+	{
+		INPUT Inputs[1];
+		Inputs[0].type = INPUT_MOUSE;
+		Inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+		SendInput(1, Inputs, sizeof(INPUT));
+
+		mouseLeftDown = false;
+	}
 }
 
 void TriggerMouseRightDown()
 {
-	INPUT Inputs[1];
-	Inputs[0].type = INPUT_MOUSE;
-	Inputs[0].mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
-	SendInput(1, Inputs, sizeof(INPUT));
+	if(!mouseRightDown)
+	{
+		INPUT Inputs[1];
+		Inputs[0].type = INPUT_MOUSE;
+		Inputs[0].mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+		SendInput(1, Inputs, sizeof(INPUT));
+
+		mouseRightDown = true;
+	}
 }
 
 void TriggerMouseRightUp()
 {
-	INPUT Inputs[1];
-	Inputs[0].type = INPUT_MOUSE;
-	Inputs[0].mi.dwFlags = MOUSEEVENTF_RIGHTUP;
-	SendInput(1, Inputs, sizeof(INPUT));
+	if(mouseRightDown)
+	{
+		INPUT Inputs[1];
+		Inputs[0].type = INPUT_MOUSE;
+		Inputs[0].mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+		SendInput(1, Inputs, sizeof(INPUT));
+
+		mouseRightDown = false;
+	}
 }
 
 void TriggerVerticalScroll(float dScrollValue)
@@ -158,6 +184,33 @@ void TriggerNavigationForward()
 	INPUT Inputs[1];
 	Inputs[0].type = INPUT_KEYBOARD;
 	Inputs[0].ki.wVk = VK_BROWSER_FORWARD;
+	Inputs[0].ki.dwFlags = WM_KEYUP;
+	SendInput(1, Inputs, sizeof(INPUT));
+}
+
+void TriggerMediaBack()
+{
+	INPUT Inputs[1];
+	Inputs[0].type = INPUT_KEYBOARD;
+	Inputs[0].ki.wVk = VK_MEDIA_PREV_TRACK;
+	Inputs[0].ki.dwFlags = WM_KEYUP;
+	SendInput(1, Inputs, sizeof(INPUT));
+}
+
+void TriggerMediaNext()
+{
+	INPUT Inputs[1];
+	Inputs[0].type = INPUT_KEYBOARD;
+	Inputs[0].ki.wVk = VK_MEDIA_NEXT_TRACK;
+	Inputs[0].ki.dwFlags = WM_KEYUP;
+	SendInput(1, Inputs, sizeof(INPUT));
+}
+
+void TriggerEnterButton()
+{
+	INPUT Inputs[1];
+	Inputs[0].type = INPUT_KEYBOARD;
+	Inputs[0].ki.wVk = VK_RETURN;
 	Inputs[0].ki.dwFlags = WM_KEYUP;
 	SendInput(1, Inputs, sizeof(INPUT));
 }
