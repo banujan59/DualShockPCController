@@ -36,7 +36,7 @@ namespace
 		L2 = 0x00400,
 		R2 = 0x00800,
 		X = 0x01000,
-		CRICLE = 0x02000,
+		CIRCLE = 0x02000,
 		SQUARE = 0x04000,
 		TRIANGLE = 0x08000,
 		PS_BUTTON = 0x10000,
@@ -47,7 +47,8 @@ namespace
 DualShockController::DualShockController() :
 m_bContinueThreadExecution(false),
 m_pThread(nullptr),
-m_mouseAccelerationFactor(20)
+m_mouseAccelerationFactor(20),
+m_previousIterationButtonDown(0)
 {
 	m_nConnectedDeviceID = -1;
 }
@@ -136,9 +137,56 @@ void DualShockController::_CaptureEvents()
 			bMouseRightDown = false;
 		}
 
+		if(joyState.buttons == DualShock4Buttons::SQUARE && m_previousIterationButtonDown != DualShock4Buttons::SQUARE)
+		{
+			ToggleActiveWindowMaximized();
+		}
+
+		else if(joyState.buttons == DualShock4Buttons::TRIANGLE && m_previousIterationButtonDown != DualShock4Buttons::TRIANGLE)
+		{
+			ToggleActiveWindowMinimized();
+		}
+
+		else if(joyState.buttons == DualShock4Buttons::CIRCLE && m_previousIterationButtonDown != DualShock4Buttons::CIRCLE)
+		{
+			CloseActiveWindow();
+		}
+
+		else if(joyState.buttons == DualShock4Buttons::LEFT_DPAD && m_previousIterationButtonDown != DualShock4Buttons::LEFT_DPAD)
+		{
+			TriggerLeftArrowKey();
+		}
+
+		else if (joyState.buttons == DualShock4Buttons::RIGHT_DPAD && m_previousIterationButtonDown != DualShock4Buttons::RIGHT_DPAD)
+		{
+			TriggerRightArrowKey();
+		}
+
+		else if (joyState.buttons == DualShock4Buttons::UP_DPAD && m_previousIterationButtonDown != DualShock4Buttons::UP_DPAD)
+		{
+			TriggerUpArrowKey();
+		}
+
+		else if (joyState.buttons == DualShock4Buttons::DOWN_DPAD && m_previousIterationButtonDown != DualShock4Buttons::DOWN_DPAD)
+		{
+			TriggerDownArrowKey();
+		}
+
+		else if (joyState.buttons == DualShock4Buttons::L1 && m_previousIterationButtonDown != DualShock4Buttons::L1)
+		{
+			TriggerNavigationBack();
+		}
+
+		else if (joyState.buttons == DualShock4Buttons::R1 && m_previousIterationButtonDown != DualShock4Buttons::R1)
+		{
+			TriggerNavigationForward();
+		}
+
 		// update scrollwheel
 		TriggerVerticalScroll(joyState.stickRY);
 		TriggerHorizontalScroll(joyState.stickRX);
+
+		m_previousIterationButtonDown = joyState.buttons;
 
 		std::this_thread::sleep_for(std::chrono::microseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MICROSECONDS));
 	}
