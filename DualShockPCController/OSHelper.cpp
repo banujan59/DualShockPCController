@@ -146,34 +146,18 @@ void TriggerDownArrowKey()
 
 void TriggerNavigationBack()
 {
-	INPUT Inputs[3];
+	INPUT Inputs[1];
 	Inputs[0].type = INPUT_KEYBOARD;
-	Inputs[0].ki.wVk = VK_MENU;
-	Inputs[0].ki.dwFlags = WM_KEYDOWN;
-
-	Inputs[1].type = INPUT_KEYBOARD;
-	Inputs[1].ki.wVk = VK_LEFT;
-	Inputs[1].ki.dwFlags = WM_KEYDOWN;
-
-	Inputs[2].type = INPUT_KEYBOARD;
-	Inputs[2].ki.wVk = VK_MENU;
-	Inputs[2].ki.dwFlags = KEYEVENTF_KEYUP;
-	SendInput(3, Inputs, sizeof(INPUT));
+	Inputs[0].ki.wVk = VK_BROWSER_BACK;
+	Inputs[0].ki.dwFlags = WM_KEYUP;
+	SendInput(1, Inputs, sizeof(INPUT));
 }
 
 void TriggerNavigationForward()
 {
-	INPUT Inputs[3];
+	INPUT Inputs[1];
 	Inputs[0].type = INPUT_KEYBOARD;
-	Inputs[0].ki.wVk = VK_MENU;
-	Inputs[0].ki.dwFlags = WM_KEYDOWN;
-
-	Inputs[1].type = INPUT_KEYBOARD;
-	Inputs[1].ki.wVk = VK_RIGHT;
-	Inputs[1].ki.dwFlags = WM_KEYDOWN;
-
-	Inputs[2].type = INPUT_KEYBOARD;
-	Inputs[2].ki.wVk = VK_MENU;
-	Inputs[2].ki.dwFlags = KEYEVENTF_KEYUP;
-	SendInput(3, Inputs, sizeof(INPUT));
+	Inputs[0].ki.wVk = VK_BROWSER_FORWARD;
+	Inputs[0].ki.dwFlags = WM_KEYUP;
+	SendInput(1, Inputs, sizeof(INPUT));
 }
