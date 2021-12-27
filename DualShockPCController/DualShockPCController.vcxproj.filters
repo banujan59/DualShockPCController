@@ -58,6 +58,12 @@
     <ClCompile Include="MouseSensitivitySettings.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
+    <ClCompile Include="DefaultConfigButtonHandler.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomButtonHandler.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -75,6 +81,12 @@
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
     <ClInclude Include="OSHelper.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultConfigButtonHandler.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomButtonHandler.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
   </ItemGroup>
