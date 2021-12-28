@@ -6,7 +6,7 @@ MouseSensitivitySettings::MouseSensitivitySettings(DualShockController* pDualSho
 	m_testMouseSensitivityThread(nullptr)
 {
 	if (m_pDualShockController == nullptr)
-		QApplication::exit(-1);
+		return;
 
 	ui.setupUi(this);
 

@@ -4,6 +4,10 @@ GyroMouseControlSettings::GyroMouseControlSettings(DualShockController* pDualSho
 	: QWidget(parent),
 	m_pDualShockController(pDualShockController)
 {
+
+	if (m_pDualShockController == nullptr)
+		return;
+
 	ui.setupUi(this);
 	connect(ui.gyroControlStateCheckBox, &QCheckBox::stateChanged, this, &GyroMouseControlSettings::UpdateGyroControlEnabled);
 }
