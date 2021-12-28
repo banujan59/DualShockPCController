@@ -35,9 +35,10 @@ private:
 	std::unordered_map<int, std::function<void()>> m_cLongButtonUpFunctionMap;
 
 	int m_mouseAccelerationFactor;
+	std::string m_buttonLayoutName;
 
 public:
-	CustomButtonHandler();
+	CustomButtonHandler(std::string buttonLayoutName);
 
 	void AddButtonDownMapping(int button, std::function<void()> function);
 	void AddShortButtonUpMapping(int button, std::function<void()> function);
@@ -65,6 +66,7 @@ public:
 	void UpdateMouseScrollWithJoySticks(float stickRX, float stickRY) const;
 	static void UpdateMouseWIthGyro(float gyroX, float gyroY);
 
+	std::string GetButtonLayoutName() const;
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor);
 };

@@ -1,8 +1,11 @@
 #include "CustomButtonHandler.h"
+
+#include <utility>
 #include "OSHelper.h"
 
-CustomButtonHandler::CustomButtonHandler() :
-	m_mouseAccelerationFactor(20)
+CustomButtonHandler::CustomButtonHandler(std::string buttonLayoutName) :
+	m_mouseAccelerationFactor(20),
+	m_buttonLayoutName(std::move(buttonLayoutName))
 {
 	
 }
@@ -97,6 +100,12 @@ void CustomButtonHandler::UpdateMouseWIthGyro(float gyroX, float gyroY)
 		SetNewMousePosition(oMousePosition);
 	}
 }
+
+std::string CustomButtonHandler::GetButtonLayoutName() const
+{
+	return m_buttonLayoutName;
+}
+
 
 int CustomButtonHandler::GetMouseAccelerationFactor() const
 {
