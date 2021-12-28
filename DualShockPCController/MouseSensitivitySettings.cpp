@@ -18,6 +18,12 @@ MouseSensitivitySettings::MouseSensitivitySettings(DualShockController* pDualSho
 
 	connect(ui.mouseSensitivitySlider, &QSlider::valueChanged, this, &MouseSensitivitySettings::HandleMouseSensitivitySliderValueChanged);
 	connect(ui.testMouseSensitivityButton, &QPushButton::clicked, this, &MouseSensitivitySettings::HandleTestMouseSensitivityFor5Seconds);
+
+	connect(ui.resetToDefaultButton, &QPushButton::clicked, [&]()
+		{
+			ui.mouseSensitivitySlider->setValue(m_pDualShockController->GetMouseAccelerationFactor());
+		});
+
 	connect(ui.applyMouseSensitivity, &QPushButton::clicked, this, &MouseSensitivitySettings::HandleMouseSensitivityApplyButtonClicked);
 	connect(this, &MouseSensitivitySettings::UpdateTestButtonTextSignal,
 		[&](const QString& buttonText) { ui.testMouseSensitivityButton->setText(buttonText); });
@@ -39,12 +45,15 @@ void MouseSensitivitySettings::HandleWidgetEnableStateChange(bool disableState)
 {
 	if (disableState)
 	{
+		ui.mouseSensitivityLabel->setDisabled(true);
 		ui.testMouseSensitivityButton->setDisabled(true);
+		ui.resetToDefaultButton->setDisabled(true);
 		ui.applyMouseSensitivity->setDisabled(true);
 	}
 
 	else
 	{
+		ui.mouseSensitivityLabel->setDisabled(false);
 		HandleMouseSensitivitySliderValueChanged(ui.mouseSensitivitySpinBox->value());
 	}
 
@@ -63,12 +72,14 @@ void MouseSensitivitySettings::HandleMouseSensitivitySliderValueChanged(int newV
 	if (newValue == m_pDualShockController->GetMouseAccelerationFactor())
 	{
 		ui.testMouseSensitivityButton->setDisabled(true);
+		ui.resetToDefaultButton->setDisabled(true);
 		ui.applyMouseSensitivity->setDisabled(true);
 	}
 
 	else
 	{
 		ui.testMouseSensitivityButton->setDisabled(false);
+		ui.resetToDefaultButton->setDisabled(false);
 		ui.applyMouseSensitivity->setDisabled(false);
 	}
 }
