@@ -44,4 +44,7 @@ DefaultConfigButtonHandler::DefaultConfigButtonHandler()
 	// R3 to right mouse button
 	AddButtonDownMapping(DualShock4Buttons::R3, TriggerMouseRightDown);
 	AddButtonUpMapping(DualShock4Buttons::R3, TriggerMouseRightUp);
+
+	// center to center mouse
+	AddLongButtonUpMapping(CENTER_TOUCH_BAR, CenterMouseToScreen);
 }

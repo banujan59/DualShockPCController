@@ -64,12 +64,18 @@
     <ClCompile Include="CustomButtonHandler.cpp">
       <Filter>Source Files\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="GyroMouseControlSettings.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
       <Filter>Header Files\View</Filter>
     </QtMoc>
     <QtMoc Include="MouseSensitivitySettings.h">
+      <Filter>Header Files\View</Filter>
+    </QtMoc>
+    <QtMoc Include="GyroMouseControlSettings.h">
       <Filter>Header Files\View</Filter>
     </QtMoc>
   </ItemGroup>
@@ -92,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MouseSensitivitySettings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="GyroMouseControlSettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

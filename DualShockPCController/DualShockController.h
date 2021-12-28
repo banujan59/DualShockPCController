@@ -9,10 +9,11 @@ private:
 	int m_nConnectedDeviceID;
 	bool m_bContinueThreadExecution;
 	std::unique_ptr<std::thread> m_pThread;
-
-	int m_mouseAccelerationFactor;
+	
 	int m_previousIterationButtonDown;
 	int m_timeButtonSpentDown;
+
+	bool m_gyroControlledMouseEnabled;
 
 	CustomButtonHandler* m_currentButtonHandler;
 	std::vector<CustomButtonHandler> m_availableButtonHandlers;
@@ -24,8 +25,11 @@ public:
 	~DualShockController();
 	bool ConnectToDevice();
 
-	int GetMouseAccelerationFactor();
-	void SetMouseAccelerationFactor(int newFactor);
+	void EnableGryoControlledMouse(bool enable);
+	bool IsGyroControlledMouseEnabled() const;
+
+	int GetMouseAccelerationFactor() const;
+	void SetMouseAccelerationFactor(int newFactor) const;
 
 	static int GetMaxMouseSensitivityFactor();
 	static int GetMinMouseSensitivityFactor();

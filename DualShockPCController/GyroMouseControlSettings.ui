@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GyroMouseControlSettings</class>
+ <widget class="QWidget" name="GyroMouseControlSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>279</width>
+    <height>84</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GyroMouseControlSettings</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QCheckBox" name="gyroControlStateCheckBox">
+       <property name="text">
+        <string>Enable gryo controlled mouse</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="gyroControlText">
+       <property name="text">
+        <string>You can center the mouse on the screen with a long press of the center touch bar</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
