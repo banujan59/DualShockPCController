@@ -16,6 +16,9 @@ public:
 private slots:
 	void UpdateGyroControlEnabled(int state);
 
+public slots:
+	void HandleWidgetEnableStateChange(bool disableState);
+
 private:
 	Ui::GyroMouseControlSettings ui;
 	DualShockController* m_pDualShockController;

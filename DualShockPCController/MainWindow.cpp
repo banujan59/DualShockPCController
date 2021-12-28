@@ -27,6 +27,7 @@ MainWindow::MainWindow(DualShockController* pDualShockController, QWidget* paren
 
 		// connect WidgetEnableStateChangeSignal signal
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, this, &MainWindow::HandleWidgetEnableStateChange);
+		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_gyroMouseControlSettings, &GyroMouseControlSettings::HandleWidgetEnableStateChange);
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_mouseSensitivitySettings, &MouseSensitivitySettings::HandleWidgetEnableStateChange);
 
 		// Display UI

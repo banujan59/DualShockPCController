@@ -28,3 +28,9 @@ void GyroMouseControlSettings::UpdateGyroControlEnabled(int state)
 		m_pDualShockController->EnableGryoControlledMouse(true);
 	}
 }
+
+void GyroMouseControlSettings::HandleWidgetEnableStateChange(bool disableState)
+{
+	ui.gyroControlStateCheckBox->setDisabled(disableState);
+	ui.gyroControlText->setDisabled(disableState);
+}
