@@ -25,9 +25,9 @@ DualShockController::DualShockController() :
 	m_nConnectedDeviceID(-1),
 	m_bContinueThreadExecution(false),
 	m_pThread(nullptr),
-	m_mouseAccelerationFactor(20),
 	m_previousIterationButtonDown(0),
-	m_timeButtonSpentDown(0)
+	m_timeButtonSpentDown(0),
+	m_gyroControlledMouseEnabled(false)
 {
 	// Load list of available button handlers
 	m_availableButtonHandlers.push_back(DefaultConfigButtonHandler());
@@ -82,19 +82,24 @@ bool DualShockController::ConnectToDevice()
 
 void DualShockController::_CaptureEvents()
 {
+	// TODO temp
+	EnableGryoControlledMouse(false);
+
 	while(m_bContinueThreadExecution)
 	{
-		JOY_SHOCK_STATE joyState = JslGetSimpleState(m_nConnectedDeviceID);
+		const JOY_SHOCK_STATE joyState = JslGetSimpleState(m_nConnectedDeviceID);
 		
 		// Update mouse position
-		MousePosition oMousePosition = GetCurrentMousePosition();
-		oMousePosition.x = oMousePosition.x + static_cast<long>(static_cast<float>(m_mouseAccelerationFactor) * joyState.stickLX);
-		oMousePosition.y = oMousePosition.y - static_cast<long>(static_cast<float>(m_mouseAccelerationFactor) * joyState.stickLY);
-		SetNewMousePosition(oMousePosition);
+		m_currentButtonHandler->UpdateMousePosWithJoySticks(joyState.stickLX, joyState.stickLY);
+
+		if(m_gyroControlledMouseEnabled)
+		{
+			const IMU_STATE  imuState = JslGetIMUState(m_nConnectedDeviceID);
+			CustomButtonHandler::UpdateMouseWIthGyro(imuState.gyroX, imuState.gyroY);
+		}
 
 		// update scrollwheel
-		TriggerVerticalScroll(joyState.stickRY);
-		TriggerHorizontalScroll(joyState.stickRX);
+		m_currentButtonHandler->UpdateMouseScrollWithJoySticks(joyState.stickRX, joyState.stickRY);
 
 
 		if(m_previousIterationButtonDown != joyState.buttons)
@@ -114,14 +119,29 @@ void DualShockController::_CaptureEvents()
 	}
 }
 
-int DualShockController::GetMouseAccelerationFactor()
+void DualShockController::EnableGryoControlledMouse(bool enable)
 {
-	return m_mouseAccelerationFactor;
+	m_gyroControlledMouseEnabled = enable;
+	if(m_gyroControlledMouseEnabled)
+	{
+		JslStartContinuousCalibration(m_nConnectedDeviceID);
+	}
+
+	else
+	{
+		JslPauseContinuousCalibration(m_nConnectedDeviceID);
+		JslResetContinuousCalibration(m_nConnectedDeviceID);
+	}
 }
 
-void DualShockController::SetMouseAccelerationFactor(int newFactor)
+int DualShockController::GetMouseAccelerationFactor() const
 {
-	m_mouseAccelerationFactor = newFactor;
+	return m_currentButtonHandler->GetMouseAccelerationFactor();
+}
+
+void DualShockController::SetMouseAccelerationFactor(int newFactor) const
+{
+	m_currentButtonHandler->SetMouseAccelerationFactor(newFactor);
 }
 
 int DualShockController::GetMaxMouseSensitivityFactor()

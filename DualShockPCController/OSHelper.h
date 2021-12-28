@@ -11,10 +11,14 @@ struct MousePosition {
 
 MousePosition GetCurrentMousePosition();
 void SetNewMousePosition(MousePosition& oNewPosition);
+
+void GetScreenResolution(long& windowWidth, long& windowHeight);
+
 void TriggerMouseLeftDown();
 void TriggerMouseLeftUp();
 void TriggerMouseRightDown();
 void TriggerMouseRightUp();
+
 void TriggerVerticalScroll(float dScrollValue);
 void TriggerHorizontalScroll(float dScrollValue);
 

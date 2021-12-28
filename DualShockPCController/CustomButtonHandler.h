@@ -34,7 +34,11 @@ private:
 	std::unordered_map<int, std::function<void()>> m_cShortButtonUpFunctionMap;
 	std::unordered_map<int, std::function<void()>> m_cLongButtonUpFunctionMap;
 
+	int m_mouseAccelerationFactor;
+
 public:
+	CustomButtonHandler();
+
 	void AddButtonDownMapping(int button, std::function<void()> function);
 	void AddShortButtonUpMapping(int button, std::function<void()> function);
 	void AddLongButtonUpMapping(int button, std::function<void()> function);
@@ -54,5 +58,14 @@ public:
 	/// <param name="durationMS">The time the button spent down before calling this event handler. The value is expected to be in milliseconds.
 	/// This will be used to call the correct short press or long press function handler</param>
 	void OnKeyUp(int buttons, int durationMS);
+
+
+	static void CenterMouseToScreen();
+	void UpdateMousePosWithJoySticks(float stickLX, float stickLY) const;
+	void UpdateMouseScrollWithJoySticks(float stickRX, float stickRY) const;
+	static void UpdateMouseWIthGyro(float gyroX, float gyroY);
+
+	int GetMouseAccelerationFactor() const;
+	void SetMouseAccelerationFactor(int newFactor);
 };
 

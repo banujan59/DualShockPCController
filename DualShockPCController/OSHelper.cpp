@@ -29,6 +29,15 @@ void SetNewMousePosition(MousePosition& oNewPosition)
 	SetCursorPos(oNewPosition.x, oNewPosition.y);
 }
 
+void GetScreenResolution(long& windowWidth, long& windowHeight)
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	windowWidth = desktop.right;
+	windowHeight = desktop.bottom;
+}
+
 void TriggerMouseLeftDown()
 {
 	if(!mouseLeftDown)
