@@ -1,40 +1,44 @@
 #pragma once
 
-struct MousePosition {
-	long x = 0;
-	long y = 0;
-};
 
-/*
- * These function are platform specific.
- */
+namespace OSHelper
+{
+	struct MousePosition {
+		long x = 0;
+		long y = 0;
+	};
 
-MousePosition GetCurrentMousePosition();
-void SetNewMousePosition(MousePosition& oNewPosition);
+	/*
+	 * These function are platform specific.
+	 */
 
-void GetScreenResolution(long& windowWidth, long& windowHeight);
+	MousePosition GetCurrentMousePosition();
+	void SetNewMousePosition(MousePosition& oNewPosition);
 
-void TriggerMouseLeftDown();
-void TriggerMouseLeftUp();
-void TriggerMouseRightDown();
-void TriggerMouseRightUp();
+	void GetScreenResolution(long& windowWidth, long& windowHeight);
 
-void TriggerVerticalScroll(float dScrollValue);
-void TriggerHorizontalScroll(float dScrollValue);
+	void TriggerMouseLeftDown();
+	void TriggerMouseLeftUp();
+	void TriggerMouseRightDown();
+	void TriggerMouseRightUp();
 
-void ToggleActiveWindowMaximized();
-void ToggleActiveWindowMinimized();
-void CloseActiveWindow();
+	void TriggerVerticalScroll(float dScrollValue);
+	void TriggerHorizontalScroll(float dScrollValue);
 
-void TriggerLeftArrowKey();
-void TriggerRightArrowKey();
-void TriggerUpArrowKey();
-void TriggerDownArrowKey();
+	void ToggleActiveWindowMaximized();
+	void ToggleActiveWindowMinimized();
+	void CloseActiveWindow();
 
-void TriggerNavigationBack();
-void TriggerNavigationForward();
+	void TriggerLeftArrowKey();
+	void TriggerRightArrowKey();
+	void TriggerUpArrowKey();
+	void TriggerDownArrowKey();
 
-void TriggerMediaBack();
-void TriggerMediaNext();
+	void TriggerNavigationBack();
+	void TriggerNavigationForward();
 
-void TriggerEnterButton();
+	void TriggerMediaBack();
+	void TriggerMediaNext();
+
+	void TriggerEnterButton();
+}
