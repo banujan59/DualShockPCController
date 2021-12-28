@@ -82,9 +82,6 @@ bool DualShockController::ConnectToDevice()
 
 void DualShockController::_CaptureEvents()
 {
-	// TODO temp
-	EnableGryoControlledMouse(false);
-
 	while(m_bContinueThreadExecution)
 	{
 		const JOY_SHOCK_STATE joyState = JslGetSimpleState(m_nConnectedDeviceID);
@@ -132,6 +129,11 @@ void DualShockController::EnableGryoControlledMouse(bool enable)
 		JslPauseContinuousCalibration(m_nConnectedDeviceID);
 		JslResetContinuousCalibration(m_nConnectedDeviceID);
 	}
+}
+
+bool DualShockController::IsGyroControlledMouseEnabled() const
+{
+	return m_gyroControlledMouseEnabled;
 }
 
 int DualShockController::GetMouseAccelerationFactor() const

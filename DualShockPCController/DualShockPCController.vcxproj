@@ -101,9 +101,11 @@
   <ItemGroup>
     <ClCompile Include="CustomButtonHandler.cpp" />
     <ClCompile Include="DefaultConfigButtonHandler.cpp" />
+    <ClCompile Include="GyroMouseControlSettings.cpp" />
     <ClCompile Include="MouseSensitivitySettings.cpp" />
     <ClCompile Include="OSHelper.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="GyroMouseControlSettings.ui" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
     <ClCompile Include="DualShockController.cpp" />
@@ -115,6 +117,7 @@
     <ClInclude Include="CustomButtonHandler.h" />
     <ClInclude Include="DefaultConfigButtonHandler.h" />
     <ClInclude Include="DualShockController.h" />
+    <QtMoc Include="GyroMouseControlSettings.h" />
     <ClInclude Include="JoyShockLibrary.h" />
     <QtMoc Include="MouseSensitivitySettings.h" />
     <ClInclude Include="OSHelper.h" />

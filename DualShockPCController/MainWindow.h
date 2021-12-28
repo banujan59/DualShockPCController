@@ -4,6 +4,7 @@
 #include "ui_MainWindow.h"
 
 #include "DualShockController.h"
+#include "GyroMouseControlSettings.h"
 #include "MouseSensitivitySettings.h"
 
 class MainWindow : public QMainWindow
@@ -23,4 +24,5 @@ private:
     Ui::MainWindowClass ui;
 	DualShockController* m_pDualShockController;
     MouseSensitivitySettings m_mouseSensitivitySettings;
+    GyroMouseControlSettings m_gyroMouseControlSettings;
 };

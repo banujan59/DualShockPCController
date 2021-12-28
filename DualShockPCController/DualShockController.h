@@ -26,6 +26,7 @@ public:
 	bool ConnectToDevice();
 
 	void EnableGryoControlledMouse(bool enable);
+	bool IsGyroControlledMouseEnabled() const;
 
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor) const;
