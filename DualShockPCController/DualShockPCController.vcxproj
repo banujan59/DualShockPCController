@@ -99,12 +99,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ButtonLayoutSettings.cpp" />
     <ClCompile Include="CustomButtonHandler.cpp" />
     <ClCompile Include="DefaultConfigButtonHandler.cpp" />
     <ClCompile Include="GyroMouseControlSettings.cpp" />
     <ClCompile Include="MouseSensitivitySettings.cpp" />
     <ClCompile Include="OSHelper.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="ButtonLayoutSettings.ui" />
     <QtUic Include="GyroMouseControlSettings.ui" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
@@ -114,6 +116,7 @@
     <QtUic Include="MouseSensitivitySettings.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="ButtonLayoutSettings.h" />
     <ClInclude Include="CustomButtonHandler.h" />
     <ClInclude Include="DefaultConfigButtonHandler.h" />
     <ClInclude Include="DualShockController.h" />

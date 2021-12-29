@@ -25,6 +25,8 @@ public:
 	~DualShockController();
 	bool ConnectToDevice();
 
+	std::vector<std::string> GetButtonConfigurationNames() const;
+
 	void EnableGryoControlledMouse(bool enable);
 	bool IsGyroControlledMouseEnabled() const;
 

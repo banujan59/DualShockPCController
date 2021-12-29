@@ -116,6 +116,20 @@ void DualShockController::_CaptureEvents()
 	}
 }
 
+std::vector<std::string> DualShockController::GetButtonConfigurationNames() const
+{
+	std::vector<std::string> configurationNames;
+
+	std::ranges::for_each(m_availableButtonHandlers, 
+      [&configurationNames](const CustomButtonHandler& buttonHandler)
+      {
+          configurationNames.push_back(buttonHandler.GetButtonLayoutName());
+      }
+	);
+
+	return configurationNames;
+}
+
 void DualShockController::EnableGryoControlledMouse(bool enable)
 {
 	m_gyroControlledMouseEnabled = enable;

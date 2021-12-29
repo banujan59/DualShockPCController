@@ -67,6 +67,9 @@
     <ClCompile Include="GyroMouseControlSettings.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
+    <ClCompile Include="ButtonLayoutSettings.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -76,6 +79,9 @@
       <Filter>Header Files\View</Filter>
     </QtMoc>
     <QtMoc Include="GyroMouseControlSettings.h">
+      <Filter>Header Files\View</Filter>
+    </QtMoc>
+    <QtMoc Include="ButtonLayoutSettings.h">
       <Filter>Header Files\View</Filter>
     </QtMoc>
   </ItemGroup>
@@ -101,6 +107,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="GyroMouseControlSettings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ButtonLayoutSettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

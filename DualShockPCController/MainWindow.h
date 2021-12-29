@@ -4,6 +4,7 @@
 #include "ui_MainWindow.h"
 
 #include "DualShockController.h"
+#include "ButtonLayoutSettings.h"
 #include "GyroMouseControlSettings.h"
 #include "MouseSensitivitySettings.h"
 
@@ -23,6 +24,8 @@ private slots:
 private:
     Ui::MainWindowClass ui;
 	DualShockController* m_pDualShockController;
-    MouseSensitivitySettings m_mouseSensitivitySettings;
+
+    ButtonLayoutSettings m_buttonLayoutSettings;
     GyroMouseControlSettings m_gyroMouseControlSettings;
+    MouseSensitivitySettings m_mouseSensitivitySettings;
 };
