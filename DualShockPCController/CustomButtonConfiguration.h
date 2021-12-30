@@ -75,5 +75,8 @@ public:
 	std::string GetButtonLayoutName() const;
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor);
+
+	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType);
+	void RemoveCustomCommand(std::string& commandName);
 };
 

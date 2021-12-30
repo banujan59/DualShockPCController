@@ -185,3 +185,14 @@ int DualShockController::GetMinMouseSensitivityFactor()
 {
 	return MIN_MOUSE_SENSITIVITY;
 }
+
+void DualShockController::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,
+                                               std::vector<std::string>& actionType) const
+{
+	m_currentButtonHandler->GetAllCustomCommands(commandNames, buttonList, actionType);
+}
+
+void DualShockController::RemoveCustomCommand(std::string& commandName)
+{
+	m_currentButtonHandler->RemoveCustomCommand(commandName);
+}

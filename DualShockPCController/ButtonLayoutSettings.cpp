@@ -20,20 +20,13 @@ ButtonLayoutSettings::ButtonLayoutSettings(DualShockController* pDualShockContro
 
 
 	// Populate the button sequence table
-	QList<QString> sequenceName;
-	QList<QString> sequenceButtons;
-	QList<QString> sequenceAction;
+	std::vector<std::string> commandNames, buttonList, actionType;
+	m_pDualShockController->GetAllCustomCommands(commandNames, buttonList, actionType);
+	QList<QString> sequenceName, sequenceButtons, sequenceAction;
 
-	// Create some data that is tabular in nature:
-	sequenceName.append("Thomas");
-	sequenceName.append("Richard");
-	sequenceName.append("Harrison");
-	sequenceButtons.append("123-456-7890");
-	sequenceButtons.append("222-333-4444");
-	sequenceButtons.append("333-444-5555");
-	sequenceAction.append("Call");
-	sequenceAction.append("Call");
-	sequenceAction.append("Call");
+	CopyVectorToQList(commandNames, sequenceName);
+	CopyVectorToQList(buttonList, sequenceButtons);
+	CopyVectorToQList(actionType, sequenceAction);
 
 	// Create model:
 	m_buttonSequenceTableModel = new ButtonSequenceTableModel(this);
@@ -45,9 +38,12 @@ ButtonLayoutSettings::ButtonLayoutSettings(DualShockController* pDualShockContro
 	ui.sequenceView->setModel(m_buttonSequenceTableModel);
 
 	// Single row selection only
-	ui.sequenceView->verticalHeader()->hide();
 	ui.sequenceView->setSelectionBehavior(QAbstractItemView::SelectRows);
 	ui.sequenceView->setSelectionMode(QAbstractItemView::SingleSelection);
+
+	// Adjust table header
+	ui.sequenceView->verticalHeader()->hide();
+	ui.sequenceView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 	// Make table header visible and display table:
 	ui.sequenceView->horizontalHeader()->setVisible(true);
@@ -88,7 +84,8 @@ void ButtonLayoutSettings::HandleDeleteSequenceButtonClicked() const
 
 	if(rowToRemove != -1)
 	{
-		m_buttonSequenceTableModel->removeRow(rowToRemove);
+		std::string commandNameToRemove = m_buttonSequenceTableModel->RemoveRow(rowToRemove);
+		m_pDualShockController->RemoveCustomCommand(commandNameToRemove);
 	}
 }
 
@@ -100,6 +97,17 @@ void ButtonLayoutSettings::HandleAddSequenceButtonClicked() const
 
 	m_buttonSequenceTableModel->InsertRow(name, buttons, action);
 }
+
+void ButtonLayoutSettings::CopyVectorToQList(const std::vector<std::string>& vectorToCopy, QList<QString>& outputList)
+{
+	std::ranges::for_each(vectorToCopy.begin(), vectorToCopy.end(), 
+		[&outputList](const std::string& element)
+		{
+			outputList.append(QString::fromStdString(element));
+		}
+	);
+}
+
 
 
 ButtonSequenceTableModel::ButtonSequenceTableModel(QObject* parent) : QAbstractTableModel(parent)
@@ -175,15 +183,19 @@ QVariant ButtonSequenceTableModel::headerData(int section, Qt::Orientation orien
 	return QVariant();
 }
 
-void ButtonSequenceTableModel::removeRow(int row)
+std::string ButtonSequenceTableModel::RemoveRow(int row)
 {
 	emit beginRemoveRows(QModelIndex(), row, row);
+
+	std::string commandNameToRemove = tm_sequenceName[row].toStdString();
 
 	tm_sequenceName.remove(row);
 	tm_sequenceButton.remove(row);
 	tm_sequenceAction.remove(row);
 
 	emit endRemoveRows();
+
+	return commandNameToRemove;
 }
 
 void ButtonSequenceTableModel::InsertRow(const std::string& sequenceName, const std::string& sequenceButton, const std::string& sequenceAction)

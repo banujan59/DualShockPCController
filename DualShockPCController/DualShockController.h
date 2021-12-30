@@ -35,4 +35,7 @@ public:
 
 	static int GetMaxMouseSensitivityFactor();
 	static int GetMinMouseSensitivityFactor();
+
+	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType) const;
+	void RemoveCustomCommand(std::string& commandName);
 };

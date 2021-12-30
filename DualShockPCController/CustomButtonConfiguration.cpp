@@ -19,8 +19,8 @@ CustomButtonConfiguration::CustomButtonConfiguration(std::string buttonLayoutNam
 		std::string filename = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 		OSHelper::ExecuteApplication(filename);
 	};
-
-	m_customButtonSequence.AddCommand("Open Chrome", buttonSequence, functionToExecute);
+	
+	m_customButtonSequence.AddCommand("Open Chrome", buttonSequence, functionToExecute, CustomButtonSequence::ActionType::OPEN_FILE_OR_PROGRAM);
 }
 
 void CustomButtonConfiguration::AddButtonDownMapping(int button, std::function<void()> function)
@@ -82,7 +82,6 @@ void CustomButtonConfiguration::OnKeyUp(int buttons, int durationMS)
 	{
 		m_customButtonSequence.IterateNext(buttons);
 	}
-	
 }
 
 void CustomButtonConfiguration::ActivateCustomButtonSequence()
@@ -152,4 +151,15 @@ int CustomButtonConfiguration::GetMouseAccelerationFactor() const
 void CustomButtonConfiguration::SetMouseAccelerationFactor(int newFactor)
 {
 	m_mouseAccelerationFactor = newFactor;
+}
+
+void CustomButtonConfiguration::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,
+                                                     std::vector<std::string>& actionType)
+{
+	m_customButtonSequence.GetAllCustomCommands(commandNames, buttonList, actionType);
+}
+
+void CustomButtonConfiguration::RemoveCustomCommand(std::string& commandName)
+{
+	m_customButtonSequence.DeleteCommand(commandName);
 }

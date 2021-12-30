@@ -19,14 +19,13 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    void removeRow(int row);
+    std::string RemoveRow(int row);
     void InsertRow(const std::string& sequenceName, const std::string& sequenceButton, const std::string& sequenceAction);
 
 private:
     QList<QString> tm_sequenceName;
     QList<QString> tm_sequenceButton;
     QList<QString> tm_sequenceAction;
-
 };
 
 class ButtonLayoutSettings : public QWidget
@@ -49,4 +48,6 @@ private:
 
 	DualShockController* m_pDualShockController;
     ButtonSequenceTableModel* m_buttonSequenceTableModel;
+
+    static void CopyVectorToQList(const std::vector<std::string>& vectorToCopy, QList<QString>& outputList);
 };

@@ -1,12 +1,15 @@
 #include "CustomButtonSequence.h"
 
+#include "CustomButtonConfiguration.h"
+
 CustomButtonSequence::CustomButtonSequence() :
 	m_pNodeIterator(nullptr),
 	m_invalidKeySequence(false)
 {
 }
 
-bool CustomButtonSequence::AddCommand(const std::string& commandName, const std::vector<int>& buttonList, std::function<void()>& functionToExecute)
+bool CustomButtonSequence::AddCommand(const std::string& commandName, const std::vector<int>& buttonList, std::function<void()>& functionToExecute, const
+                                      CustomButtonSequence::ActionType& actionType)
 {
 	if (buttonList.size() <= 1 || commandName.empty() || m_customCommandInfos.count(commandName) > 0)
 		return false;
@@ -36,6 +39,7 @@ bool CustomButtonSequence::AddCommand(const std::string& commandName, const std:
 	CustomCommandInfo commandInfo;
 	commandInfo.keySequence = buttonList;
 	commandInfo.functionToExecute = functionToExecute;
+	commandInfo.actionType = actionType;
 	m_customCommandInfos[commandName] = commandInfo;
 
 	return true;
@@ -123,6 +127,56 @@ void CustomButtonSequence::ExecuteCommandAtCurrentNode()
 	{
 		std::string commandName = GetCommandNameAtCurrentNode();
 		m_customCommandInfos[commandName].functionToExecute();
+	}
+}
+
+void CustomButtonSequence::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType)
+{
+	commandNames.clear();
+	buttonList.clear();
+	actionType.clear();
+
+	for(auto it = m_customCommandInfos.begin() ; it != m_customCommandInfos.end() ; it++)
+	{
+		commandNames.push_back(it->first);
+
+		std::string buttonSequence = "";
+		for(unsigned int i = 0 ; i < it->second.keySequence.size() ; i++)
+		{
+			int currentButton = it->second.keySequence[i];
+			switch(currentButton)
+			{
+			case X:
+				buttonSequence += "X";
+				break;
+			case CIRCLE:
+				buttonSequence += "CIRCLE";
+				break;
+
+			case TRIANGLE:
+				buttonSequence += "TRIANGLE";
+				break;
+
+			default:
+				buttonSequence += "UNKNOWN";
+				break;
+			}
+
+			if(i < it->second.keySequence.size() -1)
+				buttonSequence += ", ";
+		}
+
+		buttonList.push_back(buttonSequence);
+
+		switch(it->second.actionType)
+		{
+		case OPEN_FILE_OR_PROGRAM:
+			actionType.push_back("Open File or Program");
+			break;
+		default:
+			actionType.push_back("Unknown");
+			break;
+		}
 	}
 }
 
