@@ -2,7 +2,7 @@
 #include "OSHelper.h"
 
 DefaultConfigButtonHandler::DefaultConfigButtonHandler() :
-	CustomButtonHandler("Default Controller")
+	CustomButtonConfiguration("Default Controller")
 {
 	// X to left mouse button
 	AddButtonDownMapping(DualShock4Buttons::X, OSHelper::TriggerMouseLeftDown);

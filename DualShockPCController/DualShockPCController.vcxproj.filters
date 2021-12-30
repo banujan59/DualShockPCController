@@ -70,10 +70,13 @@
     <ClCompile Include="ButtonLayoutSettings.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
-    <ClCompile Include="CustomButtonHandler.cpp">
+    <ClCompile Include="CustomButtonConfiguration.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
     <ClCompile Include="DefaultConfigButtonHandler.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomButtonSequence.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,10 +104,13 @@
     <ClInclude Include="OSHelper.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="CustomButtonHandler.h">
+    <ClInclude Include="CustomButtonConfiguration.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="DefaultConfigButtonHandler.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomButtonSequence.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>

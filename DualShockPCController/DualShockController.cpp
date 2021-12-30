@@ -7,8 +7,11 @@
 namespace 
 {
 	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 10;
+	constexpr int CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY = 500;
 	constexpr int MAX_MOUSE_SENSITIVITY = 40;
 	constexpr int MIN_MOUSE_SENSITIVITY = 5;
+
+	int timeWithNoButton = 0;
 
 	enum ControllerType
 	{
@@ -92,7 +95,7 @@ void DualShockController::_CaptureEvents()
 		if(m_gyroControlledMouseEnabled)
 		{
 			const IMU_STATE  imuState = JslGetIMUState(m_nConnectedDeviceID);
-			CustomButtonHandler::UpdateMouseWIthGyro(imuState.gyroX, imuState.gyroY);
+			CustomButtonConfiguration::UpdateMouseWIthGyro(imuState.gyroX, imuState.gyroY);
 		}
 
 		// update scrollwheel
@@ -104,11 +107,24 @@ void DualShockController::_CaptureEvents()
 			m_currentButtonHandler->OnKeyUp(m_previousIterationButtonDown, m_timeButtonSpentDown);
 			m_timeButtonSpentDown = 0;
 			m_currentButtonHandler->OnKeyDown(joyState.buttons);
+
+			if(joyState.buttons == DualShock4Buttons::NO_BUTTONS)
+				timeWithNoButton = 0;
 		}
 
 		else
 		{
 			m_timeButtonSpentDown += THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS;
+		}
+
+		if(joyState.buttons == DualShock4Buttons::NO_BUTTONS && timeWithNoButton < CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY)
+		{
+			timeWithNoButton += THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS;
+
+			if(timeWithNoButton >= CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY)
+			{
+				m_currentButtonHandler->ActivateCustomButtonSequence();
+			}
 		}
 
 		m_previousIterationButtonDown = joyState.buttons;
@@ -121,7 +137,7 @@ std::vector<std::string> DualShockController::GetButtonConfigurationNames() cons
 	std::vector<std::string> configurationNames;
 
 	std::ranges::for_each(m_availableButtonHandlers, 
-      [&configurationNames](const CustomButtonHandler& buttonHandler)
+      [&configurationNames](const CustomButtonConfiguration& buttonHandler)
       {
           configurationNames.push_back(buttonHandler.GetButtonLayoutName());
       }

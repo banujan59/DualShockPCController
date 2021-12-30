@@ -100,7 +100,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ButtonLayoutSettings.cpp" />
-    <ClCompile Include="CustomButtonHandler.cpp" />
+    <ClCompile Include="CustomButtonSequence.cpp" />
+    <ClCompile Include="CustomButtonConfiguration.cpp" />
     <ClCompile Include="DefaultConfigButtonHandler.cpp" />
     <ClCompile Include="GyroMouseControlSettings.cpp" />
     <ClCompile Include="MouseSensitivitySettings.cpp" />
@@ -117,7 +118,8 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ButtonLayoutSettings.h" />
-    <ClInclude Include="CustomButtonHandler.h" />
+    <ClInclude Include="CustomButtonSequence.h" />
+    <ClInclude Include="CustomButtonConfiguration.h" />
     <ClInclude Include="DefaultConfigButtonHandler.h" />
     <ClInclude Include="DualShockController.h" />
     <QtMoc Include="GyroMouseControlSettings.h" />

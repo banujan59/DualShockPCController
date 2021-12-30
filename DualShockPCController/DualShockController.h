@@ -15,8 +15,8 @@ private:
 
 	bool m_gyroControlledMouseEnabled;
 
-	CustomButtonHandler* m_currentButtonHandler;
-	std::vector<CustomButtonHandler> m_availableButtonHandlers;
+	CustomButtonConfiguration* m_currentButtonHandler;
+	std::vector<CustomButtonConfiguration> m_availableButtonHandlers;
 
 	void _CaptureEvents();
 

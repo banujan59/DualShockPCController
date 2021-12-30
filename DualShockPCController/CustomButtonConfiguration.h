@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <functional>
+#include "CustomButtonSequence.h"
 
 enum DualShock4Buttons
 {
@@ -25,7 +26,7 @@ enum DualShock4Buttons
 	CENTER_TOUCH_BAR = 0x20000
 };
 
-class CustomButtonHandler
+class CustomButtonConfiguration
 {
 private:
 	static constexpr int LONG_PRESS_DURATION_THRESHOLD_MS = 250;
@@ -37,8 +38,11 @@ private:
 	int m_mouseAccelerationFactor;
 	std::string m_buttonLayoutName;
 
+	CustomButtonSequence m_customButtonSequence;
+	bool m_customButtonSequenceModeEnabled;
+
 public:
-	CustomButtonHandler(std::string buttonLayoutName);
+	CustomButtonConfiguration(std::string buttonLayoutName);
 
 	void AddButtonDownMapping(int button, std::function<void()> function);
 	void AddShortButtonUpMapping(int button, std::function<void()> function);
@@ -59,6 +63,8 @@ public:
 	/// <param name="durationMS">The time the button spent down before calling this event handler. The value is expected to be in milliseconds.
 	/// This will be used to call the correct short press or long press function handler</param>
 	void OnKeyUp(int buttons, int durationMS);
+
+	void ActivateCustomButtonSequence();
 
 
 	static void CenterMouseToScreen();
