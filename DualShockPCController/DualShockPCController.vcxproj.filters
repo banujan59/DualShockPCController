@@ -33,6 +33,12 @@
     <Filter Include="Header Files\Controller">
       <UniqueIdentifier>{bc036ee0-b195-43f7-b400-0055b831239b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{720f86c5-8600-472d-b321-376eb1dda13d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{b7872ee4-09c8-4ebe-a684-87bf6f5a6525}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWindow.qrc">
@@ -58,17 +64,17 @@
     <ClCompile Include="MouseSensitivitySettings.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
-    <ClCompile Include="DefaultConfigButtonHandler.cpp">
-      <Filter>Source Files\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="CustomButtonHandler.cpp">
-      <Filter>Source Files\Controller</Filter>
-    </ClCompile>
     <ClCompile Include="GyroMouseControlSettings.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
     <ClCompile Include="ButtonLayoutSettings.cpp">
       <Filter>Source Files\View</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomButtonHandler.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultConfigButtonHandler.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,11 +101,11 @@
     <ClInclude Include="OSHelper.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="DefaultConfigButtonHandler.h">
-      <Filter>Header Files\Controller</Filter>
-    </ClInclude>
     <ClInclude Include="CustomButtonHandler.h">
-      <Filter>Header Files\Controller</Filter>
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultConfigButtonHandler.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
