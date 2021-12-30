@@ -40,6 +40,11 @@ namespace OSHelper
 		windowHeight = desktop.bottom;
 	}
 
+	void ExecuteApplication(std::string filename)
+	{
+		ShellExecuteA(NULL, "open", filename.c_str(), "", NULL, SW_NORMAL);
+	}
+
 	void TriggerMouseLeftDown()
 	{
 		if (!mouseLeftDown)
