@@ -34,11 +34,13 @@ AddCustomCommandDialog::AddCustomCommandDialog(DualShockController* pDualShockCo
 	m_buttonSequenceListModel = new ButtonSequenceModel(this);
 	ui.buttonSequenceList->setModel(m_buttonSequenceListModel);
 
+	ui.removeFromSequenceButton->setDisabled(true);
 	ui.addButtonWithDSInstructionLabel->hide();
 	ui.addButtonWithDSTimerLabel->hide();
 
 	connect(ui.addButtonToSequenceButton, &QPushButton::clicked, this, &AddCustomCommandDialog::HandleAddNewButtonSequence);
 	connect(ui.addButtonToSequenceWithDS, &QPushButton::clicked, this, &AddCustomCommandDialog::HandleAddNewButtonSequenceWithDS);
+	connect(ui.removeFromSequenceButton, &QPushButton::clicked, this, &AddCustomCommandDialog::HandleDeleteButtonSequence);
 	connect(this, &AddCustomCommandDialog::ButtonSequenceWithDSDoneSignal, this, &AddCustomCommandDialog::HandleAddNewButtonSequenceWithDSDone);
 	connect(this, &AddCustomCommandDialog::UpdateDSButtonSequenceTimerSignal, this, &AddCustomCommandDialog::HandleAddNewButtonSequenceWithDSTimerUpdate);
 	connect(this, &AddCustomCommandDialog::NewDSButtonSequenceEntered, this, &AddCustomCommandDialog::HandleNewDSButtonSequenceEntered);
@@ -102,6 +104,7 @@ void AddCustomCommandDialog::HandleAddNewButtonSequenceWithDS()
 	ui.buttonSelector->setDisabled(true);
 	ui.addButtonToSequenceButton->setDisabled(true);
 	ui.addButtonToSequenceWithDS->setDisabled(true);
+	ui.removeFromSequenceButton->setDisabled(true);
 	ui.cancelButton->setDisabled(true);
 	ui.okButton->setDisabled(true);
 	ui.addButtonWithDSInstructionLabel->show();
@@ -174,6 +177,7 @@ void AddCustomCommandDialog::HandleAddNewButtonSequenceWithDSDone() const
 	ui.buttonSelector->setDisabled(false);
 	ui.addButtonToSequenceButton->setDisabled(false);
 	ui.addButtonToSequenceWithDS->setDisabled(false);
+	ui.removeFromSequenceButton->setDisabled(false);
 	ui.cancelButton->setDisabled(false);
 	ui.okButton->setDisabled(false);
 	ui.addButtonWithDSInstructionLabel->hide();
@@ -184,6 +188,29 @@ void AddCustomCommandDialog::HandleAddNewButtonSequenceWithDSDone() const
 
 void AddCustomCommandDialog::HandleDeleteButtonSequence()
 {
+	auto indexes = ui.buttonSequenceList->selectionModel()->selectedIndexes();
+
+	int currentIndex = -1;
+
+	for (const QModelIndex& index : indexes) {
+		currentIndex = index.row();
+	}
+
+	if(currentIndex != -1)
+	{
+		m_buttonSequenceListModel->RemoveRow(currentIndex);
+
+		auto it = m_buttonSequence.begin();
+		std::advance(it, currentIndex);
+		m_buttonSequence.erase(it);
+
+		auto nameIt = m_buttonSequenceNames.begin();
+		std::advance(nameIt, currentIndex);
+		m_buttonSequenceNames.erase(nameIt);
+
+		if (m_buttonSequence.size() == 0)
+			ui.removeFromSequenceButton->setDisabled(true);
+	}
 }
 
 void AddCustomCommandDialog::HandleOkButtonClicked()
@@ -226,6 +253,7 @@ void AddCustomCommandDialog::UpdateButtonSequenceList(const std::map<int, std::s
 	m_buttonSequenceNames.push_back(it->second);
 	m_buttonSequenceListModel->InsertRow(it->second);
 
+	ui.removeFromSequenceButton->setDisabled(false);
 	ui.buttonSequenceList->scrollToBottom();
 }
 
