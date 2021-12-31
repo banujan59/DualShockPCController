@@ -21,6 +21,7 @@ public:
 
     std::string RemoveRow(int row);
     void InsertRow(const std::string& sequenceName, const std::string& sequenceButton, const std::string& sequenceAction);
+    bool SequenceNameExists(const std::string& nameToCheck);
 
 private:
     QList<QString> tm_sequenceName;

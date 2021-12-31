@@ -102,8 +102,20 @@ void ButtonLayoutSettings::HandleAddSequenceButtonClicked() const
 		CustomButtonSequence::ActionType actionType = addCustomCommandDialog.GetActionType();
 		std::vector<std::string> actionTypeParameters = addCustomCommandDialog.GetActionParameters();
 
-		m_pDualShockController->AddNewCustomCommand(commandName, buttonSequence, actionType, actionTypeParameters);
+		// handle duplicate names
+		{
+			int nameIndex = 1;
+			const std::string originalName = commandName;
 
+			while (m_buttonSequenceTableModel->SequenceNameExists(commandName))
+			{
+				commandName = originalName + "_" + std::to_string(nameIndex);
+				nameIndex++;
+			}
+		}
+
+
+		m_pDualShockController->AddNewCustomCommand(commandName, buttonSequence, actionType, actionTypeParameters);
 
 		std::vector<std::string> buttonSequeneNames = addCustomCommandDialog.GetButtonSequenceNames();
 		std::string buttons = "";
@@ -116,6 +128,7 @@ void ButtonLayoutSettings::HandleAddSequenceButtonClicked() const
 		}
 
 		m_buttonSequenceTableModel->InsertRow(commandName, buttons, addCustomCommandDialog.GetActionTypeName());
+		ui.sequenceView->scrollToBottom();
 	}
 }
 
@@ -233,4 +246,14 @@ void ButtonSequenceTableModel::InsertRow(const std::string& sequenceName, const 
 	tm_sequenceAction.push_back(qSequenceAction);
 
 	emit endInsertRows();
+}
+
+bool ButtonSequenceTableModel::SequenceNameExists(const std::string& nameToCheck)
+{
+	const QString qNameToCheck = QString::fromStdString(nameToCheck);
+
+	if (std::find(tm_sequenceName.begin(), tm_sequenceName.end(), qNameToCheck) != tm_sequenceName.end())
+		return true;
+
+	return false;
 }
