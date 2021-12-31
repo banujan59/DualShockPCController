@@ -4,7 +4,8 @@
 
 AddCustomCommandDialog::AddCustomCommandDialog(DualShockController* pDualShockController, QWidget* parent)
 	: QDialog(parent),
-	m_pDualShockController(pDualShockController)
+	m_pDualShockController(pDualShockController),
+	m_pThread(nullptr)
 {
 	if (m_pDualShockController == nullptr)
 		return;
@@ -33,7 +34,14 @@ AddCustomCommandDialog::AddCustomCommandDialog(DualShockController* pDualShockCo
 	m_buttonSequenceListModel = new ButtonSequenceModel(this);
 	ui.buttonSequenceList->setModel(m_buttonSequenceListModel);
 
+	ui.addButtonWithDSInstructionLabel->hide();
+	ui.addButtonWithDSTimerLabel->hide();
+
 	connect(ui.addButtonToSequenceButton, &QPushButton::clicked, this, &AddCustomCommandDialog::HandleAddNewButtonSequence);
+	connect(ui.addButtonToSequenceWithDS, &QPushButton::clicked, this, &AddCustomCommandDialog::HandleAddNewButtonSequenceWithDS);
+	connect(this, &AddCustomCommandDialog::ButtonSequenceWithDSDoneSignal, this, &AddCustomCommandDialog::HandleAddNewButtonSequenceWithDSDone);
+	connect(this, &AddCustomCommandDialog::UpdateDSButtonSequenceTimerSignal, this, &AddCustomCommandDialog::HandleAddNewButtonSequenceWithDSTimerUpdate);
+	connect(this, &AddCustomCommandDialog::NewDSButtonSequenceEntered, this, &AddCustomCommandDialog::HandleNewDSButtonSequenceEntered);
 	connect(ui.okButton, &QPushButton::clicked, this, &AddCustomCommandDialog::HandleOkButtonClicked);
 }
 
@@ -79,9 +87,7 @@ void AddCustomCommandDialog::HandleAddNewButtonSequence()
 		auto it = m_dsButtonNames.begin();
 		std::advance(it, index);
 
-		m_buttonSequence.push_back(it->first);
-		m_buttonSequenceNames.push_back(it->second);
-		m_buttonSequenceListModel->InsertRow(it->second);
+		UpdateButtonSequenceList(it);
 	}
 
 	else if(index > 0) // because the field is editable, invalid data can be entered
@@ -89,6 +95,92 @@ void AddCustomCommandDialog::HandleAddNewButtonSequence()
 		ui.buttonSelector->removeItem(index);
 	}
 
+}
+
+void AddCustomCommandDialog::HandleAddNewButtonSequenceWithDS()
+{
+	ui.buttonSelector->setDisabled(true);
+	ui.addButtonToSequenceButton->setDisabled(true);
+	ui.addButtonToSequenceWithDS->setDisabled(true);
+	ui.cancelButton->setDisabled(true);
+	ui.okButton->setDisabled(true);
+	ui.addButtonWithDSInstructionLabel->show();
+
+
+	m_pThread.reset(new std::thread([&]()
+		{
+			m_pDualShockController->SetDSButtonSequenceMode(true);
+			//std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
+			std::chrono::time_point<std::chrono::steady_clock> timeWithNoButtonStart;
+
+			bool timeElapsed = false;
+			int previousIterationButtons = -1;
+			while(!timeElapsed)
+			{
+				int buttons = m_pDualShockController->GetLatestButtonDown();
+				if(m_dsButtonNames.count(buttons) == 0)
+				{
+					// if we are here, no buttons are pressed. we can start the countdown to end this thread.
+					if(previousIterationButtons != buttons)
+						timeWithNoButtonStart = std::chrono::steady_clock::now();
+
+					else
+					{
+						auto end = std::chrono::steady_clock::now();
+						int secondsElapsed = std::chrono::duration_cast<std::chrono::seconds>(end - timeWithNoButtonStart).count();
+
+						if (secondsElapsed >= DS_ENTER_BUTTON_SEQUENCE_MAX_SECONDS)
+							timeElapsed = true;
+						else
+						{
+							emit UpdateDSButtonSequenceTimerSignal(secondsElapsed);
+						}
+					}
+				}
+
+				else if(previousIterationButtons != buttons)
+				{
+					emit NewDSButtonSequenceEntered(buttons);
+				}
+
+				previousIterationButtons = buttons;
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			}
+
+			m_pDualShockController->SetDSButtonSequenceMode(false);
+			emit ButtonSequenceWithDSDoneSignal();
+		})
+	);
+}
+
+void AddCustomCommandDialog::HandleAddNewButtonSequenceWithDSTimerUpdate(int secondsElapsed) const
+{
+	QString text = QString("Ending in %1 seconds...").arg(DS_ENTER_BUTTON_SEQUENCE_MAX_SECONDS -secondsElapsed);
+	ui.addButtonWithDSTimerLabel->setText(text);
+	ui.addButtonWithDSTimerLabel->show();
+}
+
+void AddCustomCommandDialog::HandleNewDSButtonSequenceEntered(int buttons)
+{
+	ui.addButtonWithDSTimerLabel->hide();
+
+	if(auto it = m_dsButtonNames.find(buttons) ; it != m_dsButtonNames.end())
+	{
+		UpdateButtonSequenceList(it);
+	}
+}
+
+void AddCustomCommandDialog::HandleAddNewButtonSequenceWithDSDone() const
+{
+	ui.buttonSelector->setDisabled(false);
+	ui.addButtonToSequenceButton->setDisabled(false);
+	ui.addButtonToSequenceWithDS->setDisabled(false);
+	ui.cancelButton->setDisabled(false);
+	ui.okButton->setDisabled(false);
+	ui.addButtonWithDSInstructionLabel->hide();
+	ui.addButtonWithDSTimerLabel->hide();
+
+	m_pThread->detach();
 }
 
 void AddCustomCommandDialog::HandleDeleteButtonSequence()
@@ -127,6 +219,13 @@ void AddCustomCommandDialog::HandleOkButtonClicked()
 	}
 
 	accept();
+}
+
+void AddCustomCommandDialog::UpdateButtonSequenceList(const std::map<int, std::string>::const_iterator& it)
+{
+	m_buttonSequence.push_back(it->first);
+	m_buttonSequenceNames.push_back(it->second);
+	m_buttonSequenceListModel->InsertRow(it->second);
 }
 
 std::string AddCustomCommandDialog::GetCommandName()

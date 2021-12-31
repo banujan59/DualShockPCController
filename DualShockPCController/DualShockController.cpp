@@ -13,6 +13,8 @@ namespace
 
 	int timeWithNoButton = 0;
 
+	bool DSButtonSequenceMode = false;
+
 	enum ControllerType
 	{
 		UnknownController,
@@ -104,12 +106,16 @@ void DualShockController::_CaptureEvents()
 
 		if(m_previousIterationButtonDown != joyState.buttons)
 		{
-			m_currentButtonHandler->OnKeyUp(m_previousIterationButtonDown, m_timeButtonSpentDown);
-			m_timeButtonSpentDown = 0;
-			m_currentButtonHandler->OnKeyDown(joyState.buttons);
+			// if we are entering a new button sequence with the controller for a custom command, ignore the output to the button handler
+			if(!DSButtonSequenceMode)
+			{
+				m_currentButtonHandler->OnKeyUp(m_previousIterationButtonDown, m_timeButtonSpentDown);
+				m_timeButtonSpentDown = 0;
+				m_currentButtonHandler->OnKeyDown(joyState.buttons);
 
-			if(joyState.buttons == DualShock4Buttons::NO_BUTTONS)
-				timeWithNoButton = 0;
+				if (joyState.buttons == DualShock4Buttons::NO_BUTTONS)
+					timeWithNoButton = 0;
+			}
 		}
 
 		else
@@ -211,4 +217,14 @@ void DualShockController::AddNewCustomCommand(std::string& commmandName, std::ve
                                               std::string>& actionTypeParameters) const
 {
 	m_currentButtonHandler->AddNewCustomCommand(commmandName, buttonSequence, actionType, actionTypeParameters);
+}
+
+void DualShockController::SetDSButtonSequenceMode(bool state)
+{
+	DSButtonSequenceMode = state;
+}
+
+int DualShockController::GetLatestButtonDown() const
+{
+	return m_previousIterationButtonDown;
 }

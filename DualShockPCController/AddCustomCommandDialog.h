@@ -1,5 +1,6 @@
 #pragma once
 
+#include <thread>
 #include <vector>
 #include <QDialog>
 #include "ui_AddCustomCommandDialog.h"
@@ -39,12 +40,19 @@ public:
 private slots:
 	void HandleActionTypeChanged(int index);
 	void HandleAddNewButtonSequence();
+	void HandleAddNewButtonSequenceWithDS();
+	void HandleAddNewButtonSequenceWithDSTimerUpdate(int secondsElapsed) const;
+	void HandleNewDSButtonSequenceEntered(int buttons);
+	void HandleAddNewButtonSequenceWithDSDone() const;
 	void HandleDeleteButtonSequence();
 
 	void HandleOkButtonClicked();
 
 private:
 	Ui::AddCustomCommandDialog ui;
+
+	std::unique_ptr<std::thread> m_pThread;
+	static constexpr int DS_ENTER_BUTTON_SEQUENCE_MAX_SECONDS = 3;
 
 	DualShockController* m_pDualShockController;
 	std::map<CustomButtonSequence::ActionType, std::string> m_actionTypeNames;
@@ -58,4 +66,11 @@ private:
 	CustomButtonSequence::ActionType m_actionType;
 	std::string m_actionTypeName;
 	std::vector<std::string> m_actionParameters;
+
+	void UpdateButtonSequenceList(const std::map<int, std::string>::const_iterator& it);
+
+signals:
+	void ButtonSequenceWithDSDoneSignal();
+	void UpdateDSButtonSequenceTimerSignal(int secondsElapsed);
+	void NewDSButtonSequenceEntered(int buttons);
 };

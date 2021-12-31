@@ -43,13 +43,6 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="4">
-      <widget class="QPushButton" name="addButtonToSequenceWithDS">
-       <property name="text">
-        <string>Add Button with DualShock</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
@@ -76,6 +69,27 @@
      </item>
      <item row="0" column="1" colspan="3">
       <widget class="QLineEdit" name="commandNameField"/>
+     </item>
+     <item row="8" column="1">
+      <widget class="QPushButton" name="addButtonToSequenceWithDS">
+       <property name="text">
+        <string>Add Buttons with DualShock</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2" colspan="2">
+      <widget class="QLabel" name="addButtonWithDSInstructionLabel">
+       <property name="text">
+        <string>Enter sequence now.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="4">
+      <widget class="QLabel" name="addButtonWithDSTimerLabel">
+       <property name="text">
+        <string>Ending in 5...</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
