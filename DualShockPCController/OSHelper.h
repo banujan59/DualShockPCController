@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace OSHelper
 {
 	struct MousePosition {
@@ -16,6 +15,8 @@ namespace OSHelper
 	void SetNewMousePosition(MousePosition& oNewPosition);
 
 	void GetScreenResolution(long& windowWidth, long& windowHeight);
+
+	void ExecuteApplication(const char* filename);
 
 	void TriggerMouseLeftDown();
 	void TriggerMouseLeftUp();

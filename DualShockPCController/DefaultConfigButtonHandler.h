@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CustomButtonHandler.h"
+#include "CustomButtonConfiguration.h"
 
-class DefaultConfigButtonHandler : public CustomButtonHandler
+class DefaultConfigButtonHandler : public CustomButtonConfiguration
 {
 public:
 	DefaultConfigButtonHandler();

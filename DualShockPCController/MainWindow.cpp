@@ -4,8 +4,9 @@
 MainWindow::MainWindow(DualShockController* pDualShockController, QWidget* parent) :
 	QMainWindow(parent),
 	m_pDualShockController(pDualShockController),
-	m_mouseSensitivitySettings(MouseSensitivitySettings(pDualShockController)),
-	m_gyroMouseControlSettings(GyroMouseControlSettings(pDualShockController))
+	m_buttonLayoutSettings(ButtonLayoutSettings(pDualShockController)),
+	m_gyroMouseControlSettings(GyroMouseControlSettings(pDualShockController)),
+	m_mouseSensitivitySettings(MouseSensitivitySettings(pDualShockController))
 {
 	if(m_pDualShockController == nullptr)
 	{
@@ -22,11 +23,13 @@ MainWindow::MainWindow(DualShockController* pDualShockController, QWidget* paren
 		// UI setup
 		ui.setupUi(this);
 
-		ui.gridLayout->addWidget(&m_gyroMouseControlSettings, 2, 1, 2, 1);
-		ui.gridLayout->addWidget(&m_mouseSensitivitySettings, 1, 2, 4, 2);
+		ui.gridLayout->addWidget(&m_buttonLayoutSettings, 1, 0, 1, 2);
+		ui.gridLayout->addWidget(&m_gyroMouseControlSettings, 3, 1, 2, 1);
+		ui.gridLayout->addWidget(&m_mouseSensitivitySettings, 2, 2, 4, 2);
 
 		// connect WidgetEnableStateChangeSignal signal
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, this, &MainWindow::HandleWidgetEnableStateChange);
+		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_buttonLayoutSettings, &ButtonLayoutSettings::HandleWidgetEnableStateChange);
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_gyroMouseControlSettings, &GyroMouseControlSettings::HandleWidgetEnableStateChange);
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_mouseSensitivitySettings, &MouseSensitivitySettings::HandleWidgetEnableStateChange);
 

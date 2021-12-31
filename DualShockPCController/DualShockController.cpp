@@ -7,8 +7,13 @@
 namespace 
 {
 	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 10;
+	constexpr int CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY = 500;
 	constexpr int MAX_MOUSE_SENSITIVITY = 40;
 	constexpr int MIN_MOUSE_SENSITIVITY = 5;
+
+	int timeWithNoButton = 0;
+
+	bool DSButtonSequenceMode = false;
 
 	enum ControllerType
 	{
@@ -92,7 +97,7 @@ void DualShockController::_CaptureEvents()
 		if(m_gyroControlledMouseEnabled)
 		{
 			const IMU_STATE  imuState = JslGetIMUState(m_nConnectedDeviceID);
-			CustomButtonHandler::UpdateMouseWIthGyro(imuState.gyroX, imuState.gyroY);
+			CustomButtonConfiguration::UpdateMouseWIthGyro(imuState.gyroX, imuState.gyroY);
 		}
 
 		// update scrollwheel
@@ -101,9 +106,16 @@ void DualShockController::_CaptureEvents()
 
 		if(m_previousIterationButtonDown != joyState.buttons)
 		{
-			m_currentButtonHandler->OnKeyUp(m_previousIterationButtonDown, m_timeButtonSpentDown);
-			m_timeButtonSpentDown = 0;
-			m_currentButtonHandler->OnKeyDown(joyState.buttons);
+			// if we are entering a new button sequence with the controller for a custom command, ignore the output to the button handler
+			if(!DSButtonSequenceMode)
+			{
+				m_currentButtonHandler->OnKeyUp(m_previousIterationButtonDown, m_timeButtonSpentDown);
+				m_timeButtonSpentDown = 0;
+				m_currentButtonHandler->OnKeyDown(joyState.buttons);
+
+				if (joyState.buttons == DualShock4Buttons::NO_BUTTONS)
+					timeWithNoButton = 0;
+			}
 		}
 
 		else
@@ -111,9 +123,33 @@ void DualShockController::_CaptureEvents()
 			m_timeButtonSpentDown += THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS;
 		}
 
+		if(joyState.buttons == DualShock4Buttons::NO_BUTTONS && timeWithNoButton < CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY)
+		{
+			timeWithNoButton += THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS;
+
+			if(timeWithNoButton >= CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY)
+			{
+				m_currentButtonHandler->ActivateCustomButtonSequence();
+			}
+		}
+
 		m_previousIterationButtonDown = joyState.buttons;
 		std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS));
 	}
+}
+
+std::vector<std::string> DualShockController::GetButtonConfigurationNames() const
+{
+	std::vector<std::string> configurationNames;
+
+	std::ranges::for_each(m_availableButtonHandlers, 
+      [&configurationNames](const CustomButtonConfiguration& buttonHandler)
+      {
+          configurationNames.push_back(buttonHandler.GetButtonLayoutName());
+      }
+	);
+
+	return configurationNames;
 }
 
 void DualShockController::EnableGryoControlledMouse(bool enable)
@@ -154,4 +190,42 @@ int DualShockController::GetMaxMouseSensitivityFactor()
 int DualShockController::GetMinMouseSensitivityFactor()
 {
 	return MIN_MOUSE_SENSITIVITY;
+}
+
+void DualShockController::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,
+                                               std::vector<std::string>& actionType) const
+{
+	m_currentButtonHandler->GetAllCustomCommands(commandNames, buttonList, actionType);
+}
+
+void DualShockController::RemoveCustomCommand(std::string& commandName) const
+{
+	m_currentButtonHandler->RemoveCustomCommand(commandName);
+}
+
+void DualShockController::GetCustomCommandsActions(std::map<CustomButtonSequence::ActionType, std::string>& container)
+{
+	CustomButtonSequence::GetActionTypeNames(container);
+}
+
+void DualShockController::GetDSButtonNames(std::map<int, std::string>& container)
+{
+	CustomButtonConfiguration::GetDSButtonNames(container);
+}
+
+bool DualShockController::AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,
+                                              CustomButtonSequence::ActionType& actionType, std::vector<
+	                                              std::string>& actionTypeParameters) const
+{
+	return m_currentButtonHandler->AddNewCustomCommand(commmandName, buttonSequence, actionType, actionTypeParameters);
+}
+
+void DualShockController::SetDSButtonSequenceMode(bool state)
+{
+	DSButtonSequenceMode = state;
+}
+
+int DualShockController::GetLatestButtonDown() const
+{
+	return m_previousIterationButtonDown;
 }

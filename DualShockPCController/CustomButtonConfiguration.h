@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <functional>
+#include "CustomButtonSequence.h"
 
 enum DualShock4Buttons
 {
@@ -25,7 +26,7 @@ enum DualShock4Buttons
 	CENTER_TOUCH_BAR = 0x20000
 };
 
-class CustomButtonHandler
+class CustomButtonConfiguration
 {
 private:
 	static constexpr int LONG_PRESS_DURATION_THRESHOLD_MS = 250;
@@ -35,9 +36,13 @@ private:
 	std::unordered_map<int, std::function<void()>> m_cLongButtonUpFunctionMap;
 
 	int m_mouseAccelerationFactor;
+	std::string m_buttonConfigurationName;
+
+	CustomButtonSequence m_customButtonSequence;
+	bool m_customButtonSequenceModeEnabled;
 
 public:
-	CustomButtonHandler();
+	CustomButtonConfiguration(std::string buttonLayoutName);
 
 	void AddButtonDownMapping(int button, std::function<void()> function);
 	void AddShortButtonUpMapping(int button, std::function<void()> function);
@@ -59,13 +64,23 @@ public:
 	/// This will be used to call the correct short press or long press function handler</param>
 	void OnKeyUp(int buttons, int durationMS);
 
+	void ActivateCustomButtonSequence();
+
 
 	static void CenterMouseToScreen();
 	void UpdateMousePosWithJoySticks(float stickLX, float stickLY) const;
 	void UpdateMouseScrollWithJoySticks(float stickRX, float stickRY) const;
 	static void UpdateMouseWIthGyro(float gyroX, float gyroY);
 
+	std::string GetButtonLayoutName() const;
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor);
+
+	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType);
+	bool AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,
+	                         CustomButtonSequence::ActionType& actionType,
+	                         std::vector<std::string>& actionTypeParameters);
+	void RemoveCustomCommand(std::string& commandName);
+	static void GetDSButtonNames(std::map<int, std::string>& container);
 };
 

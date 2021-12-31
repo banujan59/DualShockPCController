@@ -33,6 +33,21 @@
     <Filter Include="Header Files\Controller">
       <UniqueIdentifier>{bc036ee0-b195-43f7-b400-0055b831239b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{720f86c5-8600-472d-b321-376eb1dda13d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{b7872ee4-09c8-4ebe-a684-87bf6f5a6525}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Form Files\ButtonLayoutSettings">
+      <UniqueIdentifier>{4698e268-85a2-446b-a258-1023f3668a7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\View\ButtonLayoutSettings">
+      <UniqueIdentifier>{9b53c881-a882-4b0a-90cb-ecbc6c8c5384}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\View\ButtonLayoutSettings">
+      <UniqueIdentifier>{09e0d21d-4c8f-4a4a-9966-3cfc9b6e8ee3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWindow.qrc">
@@ -58,14 +73,23 @@
     <ClCompile Include="MouseSensitivitySettings.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
-    <ClCompile Include="DefaultConfigButtonHandler.cpp">
-      <Filter>Source Files\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="CustomButtonHandler.cpp">
-      <Filter>Source Files\Controller</Filter>
-    </ClCompile>
     <ClCompile Include="GyroMouseControlSettings.cpp">
       <Filter>Source Files\View</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomButtonConfiguration.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultConfigButtonHandler.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomButtonSequence.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonLayoutSettings.cpp">
+      <Filter>Source Files\View\ButtonLayoutSettings</Filter>
+    </ClCompile>
+    <ClCompile Include="AddCustomCommandDialog.cpp">
+      <Filter>Source Files\View\ButtonLayoutSettings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +102,12 @@
     <QtMoc Include="GyroMouseControlSettings.h">
       <Filter>Header Files\View</Filter>
     </QtMoc>
+    <QtMoc Include="ButtonLayoutSettings.h">
+      <Filter>Header Files\View\ButtonLayoutSettings</Filter>
+    </QtMoc>
+    <QtMoc Include="AddCustomCommandDialog.h">
+      <Filter>Header Files\View\ButtonLayoutSettings</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DualShockController.h">
@@ -89,11 +119,14 @@
     <ClInclude Include="OSHelper.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="DefaultConfigButtonHandler.h">
-      <Filter>Header Files\Controller</Filter>
+    <ClInclude Include="CustomButtonConfiguration.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="CustomButtonHandler.h">
-      <Filter>Header Files\Controller</Filter>
+    <ClInclude Include="DefaultConfigButtonHandler.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomButtonSequence.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +135,12 @@
     </QtUic>
     <QtUic Include="GyroMouseControlSettings.ui">
       <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ButtonLayoutSettings.ui">
+      <Filter>Form Files\ButtonLayoutSettings</Filter>
+    </QtUic>
+    <QtUic Include="AddCustomCommandDialog.ui">
+      <Filter>Form Files\ButtonLayoutSettings</Filter>
     </QtUic>
   </ItemGroup>
 </Project>

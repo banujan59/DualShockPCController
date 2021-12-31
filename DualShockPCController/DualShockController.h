@@ -15,8 +15,8 @@ private:
 
 	bool m_gyroControlledMouseEnabled;
 
-	CustomButtonHandler* m_currentButtonHandler;
-	std::vector<CustomButtonHandler> m_availableButtonHandlers;
+	CustomButtonConfiguration* m_currentButtonHandler;
+	std::vector<CustomButtonConfiguration> m_availableButtonHandlers;
 
 	void _CaptureEvents();
 
@@ -24,6 +24,8 @@ public:
 	DualShockController();
 	~DualShockController();
 	bool ConnectToDevice();
+
+	std::vector<std::string> GetButtonConfigurationNames() const;
 
 	void EnableGryoControlledMouse(bool enable);
 	bool IsGyroControlledMouseEnabled() const;
@@ -33,4 +35,15 @@ public:
 
 	static int GetMaxMouseSensitivityFactor();
 	static int GetMinMouseSensitivityFactor();
+
+	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType) const;
+	void RemoveCustomCommand(std::string& commandName) const;
+	static void GetCustomCommandsActions(std::map<CustomButtonSequence::ActionType, std::string>& container);
+	static void GetDSButtonNames(std::map<int, std::string>& container);
+	bool AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,
+	                         CustomButtonSequence::ActionType& actionType, std::vector<
+		                         std::string>& actionTypeParameters) const;
+
+	void SetDSButtonSequenceMode(bool state);
+	int GetLatestButtonDown() const;
 };
