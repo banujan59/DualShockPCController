@@ -110,7 +110,6 @@ void AddCustomCommandDialog::HandleAddNewButtonSequenceWithDS()
 	m_pThread.reset(new std::thread([&]()
 		{
 			m_pDualShockController->SetDSButtonSequenceMode(true);
-			//std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
 			std::chrono::time_point<std::chrono::steady_clock> timeWithNoButtonStart;
 
 			bool timeElapsed = false;
@@ -226,6 +225,8 @@ void AddCustomCommandDialog::UpdateButtonSequenceList(const std::map<int, std::s
 	m_buttonSequence.push_back(it->first);
 	m_buttonSequenceNames.push_back(it->second);
 	m_buttonSequenceListModel->InsertRow(it->second);
+
+	ui.buttonSequenceList->scrollToBottom();
 }
 
 std::string AddCustomCommandDialog::GetCommandName()
