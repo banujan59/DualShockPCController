@@ -60,19 +60,10 @@ ButtonLayoutSettings::~ButtonLayoutSettings()
 
 void ButtonLayoutSettings::HandleWidgetEnableStateChange(bool disableState)
 {
-	if(disableState)
-	{
-		ui.deleteSequenceButton->setDisabled(true);
-	}
-
-	else
-	{
-		ui.deleteSequenceButton->setDisabled(false); // TODO check if an element is selected in the column view before
-	}
-
 	ui.buttonLayoutSelector->setDisabled(disableState);
 	ui.addSequenceButton->setDisabled(disableState);
 	ui.sequenceView->setDisabled(disableState);
+	ui.deleteSequenceButton->setDisabled(disableState);
 }
 
 void ButtonLayoutSettings::HandleDeleteSequenceButtonClicked() const
