@@ -136,7 +136,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="MouseSensitivitySettings.ui">
+    <QtUic Include="SensitivitySettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="GyroMouseControlSettings.ui">

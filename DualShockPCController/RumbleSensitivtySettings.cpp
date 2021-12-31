@@ -79,7 +79,7 @@ void RumbleSensitivtySettings::HandleRumbleSensitivitySliderValueChanged(int new
 	}
 }
 
-void RumbleSensitivtySettings::HandleTestRumbleSensitivityClicked()
+void RumbleSensitivtySettings::HandleTestRumbleSensitivityClicked() const
 {
 	ui.testSensitivityButton->setDisabled(true);
 	int rumbleValue = ui.sensitivitySpinBox->value();

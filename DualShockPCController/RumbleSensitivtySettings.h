@@ -16,12 +16,12 @@ public:
 private slots:
 	void HandleRumbleSensitivityApplyButtonClicked();
 	void HandleRumbleSensitivitySliderValueChanged(int newValue);
-	void HandleTestRumbleSensitivityClicked();
+	void HandleTestRumbleSensitivityClicked() const;
 
 public slots:
 	void HandleWidgetEnableStateChange(bool disableState);
 
 private:
-	Ui::MouseSensitivitySettings ui;
+	Ui::SensitivitySettings ui;
 	DualShockController* m_pDualShockController;
 };
