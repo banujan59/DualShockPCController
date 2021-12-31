@@ -9,19 +9,6 @@ CustomButtonConfiguration::CustomButtonConfiguration(std::string buttonLayoutNam
 	m_buttonLayoutName(std::move(buttonLayoutName)),
 	m_customButtonSequenceModeEnabled(false)
 {
-	// TODO remove mock and link with UI
-	// mock button sequence
-	std::vector<int> buttonSequence;
-	buttonSequence.push_back(DualShock4Buttons::X);
-	buttonSequence.push_back(DualShock4Buttons::CIRCLE);
-	buttonSequence.push_back(DualShock4Buttons::TRIANGLE);
-	std::function<void()> functionToExecute = []()
-	{
-		std::string filename = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
-		OSHelper::ExecuteApplication(filename);
-	};
-	
-	m_customButtonSequence.AddCommand("Open Chrome", buttonSequence, functionToExecute, CustomButtonSequence::ActionType::OPEN_FILE_OR_PROGRAM);
 }
 
 void CustomButtonConfiguration::AddButtonDownMapping(int button, std::function<void()> function)
