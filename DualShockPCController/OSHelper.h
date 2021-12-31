@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 
 namespace OSHelper
 {
@@ -17,7 +16,7 @@ namespace OSHelper
 
 	void GetScreenResolution(long& windowWidth, long& windowHeight);
 
-	void ExecuteApplication(std::string filename);
+	void ExecuteApplication(const char* filename);
 
 	void TriggerMouseLeftDown();
 	void TriggerMouseLeftUp();

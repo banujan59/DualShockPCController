@@ -161,7 +161,7 @@ bool CustomButtonConfiguration::AddNewCustomCommand(std::string& commmandName, s
 			for (std::string filesToOpen : actionTypeParameters)
 			{
 				if (std::filesystem::exists(filesToOpen))
-					OSHelper::ExecuteApplication(filesToOpen);
+					OSHelper::ExecuteApplication(filesToOpen.c_str());
 			}
 		};
 		break;
