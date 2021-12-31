@@ -3,12 +3,15 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <map>
 #include <functional>
 
 class CustomButtonSequence
 {
 public:
-	enum ActionType { OPEN_FILE_OR_PROGRAM };
+	enum class ActionType { OPEN_FILE_OR_PROGRAM };
+
+	static void GetActionTypeNames(std::map<CustomButtonSequence::ActionType, std::string>& container);
 
 	CustomButtonSequence();
 
@@ -18,7 +21,7 @@ public:
 	void IterateNext(int buttonPressed);
 
 	void ResetIterator();
-	bool CommandAvaialbleAtCurrentNode();
+	bool CommandAvailableAtCurrentNode();
 	std::string GetCommandNameAtCurrentNode();
 	void ExecuteCommandAtCurrentNode();
 

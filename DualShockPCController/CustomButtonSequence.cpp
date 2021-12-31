@@ -2,6 +2,12 @@
 
 #include "CustomButtonConfiguration.h"
 
+void CustomButtonSequence::GetActionTypeNames(std::map<CustomButtonSequence::ActionType, std::string>& container)
+{
+	container.clear();
+	container[CustomButtonSequence::ActionType::OPEN_FILE_OR_PROGRAM] = "Open file or program";
+}
+
 CustomButtonSequence::CustomButtonSequence() :
 	m_pNodeIterator(nullptr),
 	m_invalidKeySequence(false)
@@ -106,14 +112,14 @@ void CustomButtonSequence::ResetIterator()
 	m_invalidKeySequence = false;
 }
 
-bool CustomButtonSequence::CommandAvaialbleAtCurrentNode()
+bool CustomButtonSequence::CommandAvailableAtCurrentNode()
 {
 	return m_pNodeIterator != nullptr && !m_pNodeIterator->actionName.empty();
 }
 
 std::string CustomButtonSequence::GetCommandNameAtCurrentNode()
 {
-	if (CommandAvaialbleAtCurrentNode())
+	if (CommandAvailableAtCurrentNode())
 	{
 		return m_pNodeIterator->actionName;
 	}
@@ -123,7 +129,7 @@ std::string CustomButtonSequence::GetCommandNameAtCurrentNode()
 
 void CustomButtonSequence::ExecuteCommandAtCurrentNode()
 {
-	if(CommandAvaialbleAtCurrentNode())
+	if(CommandAvailableAtCurrentNode())
 	{
 		std::string commandName = GetCommandNameAtCurrentNode();
 		m_customCommandInfos[commandName].functionToExecute();
@@ -140,73 +146,23 @@ void CustomButtonSequence::GetAllCustomCommands(std::vector<std::string>& comman
 	{
 		commandNames.push_back(it->first);
 
+		std::map<int, std::string> container;
+		CustomButtonConfiguration::GetDSButtonNames(container);
+
 		std::string buttonSequence = "";
 		for(unsigned int i = 0 ; i < it->second.keySequence.size() ; i++)
 		{
 			int currentButton = it->second.keySequence[i];
 
-			// This is a disaster, but I'm running out of time for this project
-			// TODO improve this in the future
 			// TODO how to support simultaneously pressed buttons?
-			switch(currentButton)
+			if(container.count(currentButton) == 0)
 			{
-			case DPAD_UP:
-				buttonSequence += "UP DPAD";
-				break;
-			case DPAD_DOWN:
-				buttonSequence += "DOWN DPAD";
-				break;
-			case DPAD_LEFT:
-				buttonSequence += "LEFT DPAD";
-				break;
-			case DPAD_RIGHT:
-				buttonSequence += "RIGHT DPAD";
-				break;
-			case OPTIONS:
-				buttonSequence += "OPTIONS";
-				break;
-			case SHARE:
-				buttonSequence += "SHARE";
-				break;
-			case L3:
-				buttonSequence += "L3";
-				break;
-			case R3:
-				buttonSequence += "R3";
-				break;
-			case L1:
-				buttonSequence += "L1";
-				break;
-			case R1:
-				buttonSequence += "R1";
-				break;
-			case L2:
-				buttonSequence += "L2";
-				break;
-			case R2:
-				buttonSequence += "R2";
-				break;
-			case X:
-				buttonSequence += "X";
-				break;
-			case CIRCLE:
-				buttonSequence += "CIRCLE";
-				break;
-			case SQUARE:
-				buttonSequence += "SQUARE";
-				break;
-			case TRIANGLE:
-				buttonSequence += "TRIANGLE";
-				break;
-			case PS_BUTTON:
-				buttonSequence += "PS BUTTON";
-				break;
-			case CENTER_TOUCH_BAR:
-				buttonSequence += "CENTER TOUCH BAR";
-				break;
-			default:
 				buttonSequence += "UNKNOWN";
-				break;
+			}
+
+			else
+			{
+				buttonSequence += container[currentButton];
 			}
 
 			if(i < it->second.keySequence.size() -1)
@@ -217,7 +173,7 @@ void CustomButtonSequence::GetAllCustomCommands(std::vector<std::string>& comman
 
 		switch(it->second.actionType)
 		{
-		case OPEN_FILE_OR_PROGRAM:
+		case ActionType::OPEN_FILE_OR_PROGRAM:
 			actionType.push_back("Open File or Program");
 			break;
 		default:

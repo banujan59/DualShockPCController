@@ -1,4 +1,5 @@
 #include "ButtonLayoutSettings.h"
+#include "AddCustomCommandDialog.h"
 
 ButtonLayoutSettings::ButtonLayoutSettings(DualShockController* pDualShockController, QWidget *parent)
 	: QWidget(parent),
@@ -91,11 +92,31 @@ void ButtonLayoutSettings::HandleDeleteSequenceButtonClicked() const
 
 void ButtonLayoutSettings::HandleAddSequenceButtonClicked() const
 {
-	std::string name = "Example";
-	std::string buttons = "X, O";
-	std::string action = "to test";
+	AddCustomCommandDialog addCustomCommandDialog(m_pDualShockController);
+	const int returnVal = addCustomCommandDialog.exec();
 
-	m_buttonSequenceTableModel->InsertRow(name, buttons, action);
+	if(returnVal == QDialog::Accepted)
+	{
+		std::string commandName = addCustomCommandDialog.GetCommandName();
+		std::vector<int> buttonSequence = addCustomCommandDialog.GetButtonSequence();
+		CustomButtonSequence::ActionType actionType = addCustomCommandDialog.GetActionType();
+		std::vector<std::string> actionTypeParameters = addCustomCommandDialog.GetActionParameters();
+
+		m_pDualShockController->AddNewCustomCommand(commandName, buttonSequence, actionType, actionTypeParameters);
+
+
+		std::vector<std::string> buttonSequeneNames = addCustomCommandDialog.GetButtonSequenceNames();
+		std::string buttons = "";
+		for(auto it = buttonSequeneNames.begin() ; it != buttonSequeneNames.end() ; it++)
+		{
+			buttons += *it;
+
+			if(it != buttonSequeneNames.end() - 1)
+				buttons += ",";
+		}
+
+		m_buttonSequenceTableModel->InsertRow(commandName, buttons, addCustomCommandDialog.GetActionTypeName());
+	}
 }
 
 void ButtonLayoutSettings::CopyVectorToQList(const std::vector<std::string>& vectorToCopy, QList<QString>& outputList)
@@ -204,12 +225,12 @@ void ButtonSequenceTableModel::InsertRow(const std::string& sequenceName, const 
 	const QString qSequenceButton = QString::fromStdString(sequenceButton);
 	const QString qSequenceAction = QString::fromStdString(sequenceAction);
 
-	int lastIndex = rowCount() - 1;
-	beginInsertRows(QModelIndex(), lastIndex, lastIndex);
+	int lastIndex = rowCount();
+	emit beginInsertRows(QModelIndex(), lastIndex, lastIndex);
 
 	tm_sequenceName.push_back(qSequenceName);
 	tm_sequenceButton.push_back(qSequenceButton);
 	tm_sequenceAction.push_back(qSequenceAction);
 
-	endInsertRows();
+	emit endInsertRows();
 }

@@ -99,6 +99,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddCustomCommandDialog.cpp" />
     <ClCompile Include="ButtonLayoutSettings.cpp" />
     <ClCompile Include="CustomButtonSequence.cpp" />
     <ClCompile Include="CustomButtonConfiguration.cpp" />
@@ -107,6 +108,7 @@
     <ClCompile Include="MouseSensitivitySettings.cpp" />
     <ClCompile Include="OSHelper.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="AddCustomCommandDialog.ui" />
     <QtUic Include="ButtonLayoutSettings.ui" />
     <QtUic Include="GyroMouseControlSettings.ui" />
     <QtUic Include="MainWindow.ui" />
@@ -118,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ButtonLayoutSettings.h" />
+    <QtMoc Include="AddCustomCommandDialog.h" />
     <ClInclude Include="CustomButtonSequence.h" />
     <ClInclude Include="CustomButtonConfiguration.h" />
     <ClInclude Include="DefaultConfigButtonHandler.h" />

@@ -39,6 +39,15 @@
     <Filter Include="Source Files\Model">
       <UniqueIdentifier>{b7872ee4-09c8-4ebe-a684-87bf6f5a6525}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Form Files\ButtonLayoutSettings">
+      <UniqueIdentifier>{4698e268-85a2-446b-a258-1023f3668a7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\View\ButtonLayoutSettings">
+      <UniqueIdentifier>{9b53c881-a882-4b0a-90cb-ecbc6c8c5384}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\View\ButtonLayoutSettings">
+      <UniqueIdentifier>{09e0d21d-4c8f-4a4a-9966-3cfc9b6e8ee3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWindow.qrc">
@@ -67,9 +76,6 @@
     <ClCompile Include="GyroMouseControlSettings.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
-    <ClCompile Include="ButtonLayoutSettings.cpp">
-      <Filter>Source Files\View</Filter>
-    </ClCompile>
     <ClCompile Include="CustomButtonConfiguration.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
@@ -78,6 +84,12 @@
     </ClCompile>
     <ClCompile Include="CustomButtonSequence.cpp">
       <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonLayoutSettings.cpp">
+      <Filter>Source Files\View\ButtonLayoutSettings</Filter>
+    </ClCompile>
+    <ClCompile Include="AddCustomCommandDialog.cpp">
+      <Filter>Source Files\View\ButtonLayoutSettings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,7 +103,10 @@
       <Filter>Header Files\View</Filter>
     </QtMoc>
     <QtMoc Include="ButtonLayoutSettings.h">
-      <Filter>Header Files\View</Filter>
+      <Filter>Header Files\View\ButtonLayoutSettings</Filter>
+    </QtMoc>
+    <QtMoc Include="AddCustomCommandDialog.h">
+      <Filter>Header Files\View\ButtonLayoutSettings</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -122,7 +137,10 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ButtonLayoutSettings.ui">
-      <Filter>Form Files</Filter>
+      <Filter>Form Files\ButtonLayoutSettings</Filter>
+    </QtUic>
+    <QtUic Include="AddCustomCommandDialog.ui">
+      <Filter>Form Files\ButtonLayoutSettings</Filter>
     </QtUic>
   </ItemGroup>
 </Project>

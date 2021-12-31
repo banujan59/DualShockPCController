@@ -159,7 +159,51 @@ void CustomButtonConfiguration::GetAllCustomCommands(std::vector<std::string>& c
 	m_customButtonSequence.GetAllCustomCommands(commandNames, buttonList, actionType);
 }
 
+void CustomButtonConfiguration::AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence, CustomButtonSequence::ActionType& actionType,
+	std::vector<std::string>& actionTypeParameters)
+{
+	std::function<void()> functionToExecute;
+
+	switch (actionType)
+	{
+	case CustomButtonSequence::ActionType::OPEN_FILE_OR_PROGRAM:
+		functionToExecute = [actionTypeParameters]()
+		{
+			for (std::string filesToOpen : actionTypeParameters)
+			{
+				OSHelper::ExecuteApplication(filesToOpen);
+			}
+		};
+		break;
+	}
+
+	m_customButtonSequence.AddCommand(commmandName, buttonSequence, functionToExecute, actionType);
+}
+
 void CustomButtonConfiguration::RemoveCustomCommand(std::string& commandName)
 {
 	m_customButtonSequence.DeleteCommand(commandName);
+}
+
+void CustomButtonConfiguration::GetDSButtonNames(std::map<int, std::string>& container)
+{
+	container.clear();
+	container[DPAD_UP] = "DPAD UP";
+	container[DPAD_DOWN] = "DPAD DOWN";
+	container[DPAD_LEFT] = "DPAD LEFT";
+	container[DPAD_RIGHT] = "DPAD RIGHT";
+	container[OPTIONS] = "OPTIONS";
+	container[SHARE] = "SHARE";
+	container[L3] = "L3";
+	container[R3] = "R3";
+	container[L1] = "L1";
+	container[R1] = "R1";
+	container[L2] = "L2";
+	container[R2] = "R2";
+	container[X] = "X";
+	container[CIRCLE] = "CIRCLE";
+	container[SQUARE] = "SQUARE";
+	container[TRIANGLE] = "TRIANGLE";
+	container[PS_BUTTON] = "PS BUTTON";
+	container[CENTER_TOUCH_BAR] = "CENTER TOUCH BAR";
 }

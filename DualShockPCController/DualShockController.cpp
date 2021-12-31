@@ -192,7 +192,23 @@ void DualShockController::GetAllCustomCommands(std::vector<std::string>& command
 	m_currentButtonHandler->GetAllCustomCommands(commandNames, buttonList, actionType);
 }
 
-void DualShockController::RemoveCustomCommand(std::string& commandName)
+void DualShockController::RemoveCustomCommand(std::string& commandName) const
 {
 	m_currentButtonHandler->RemoveCustomCommand(commandName);
+}
+
+void DualShockController::GetCustomCommandsActions(std::map<CustomButtonSequence::ActionType, std::string>& container)
+{
+	CustomButtonSequence::GetActionTypeNames(container);
+}
+
+void DualShockController::GetDSButtonNames(std::map<int, std::string>& container)
+{
+	CustomButtonConfiguration::GetDSButtonNames(container);
+}
+
+void DualShockController::AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence, CustomButtonSequence::ActionType& actionType, std::vector<
+                                              std::string>& actionTypeParameters) const
+{
+	m_currentButtonHandler->AddNewCustomCommand(commmandName, buttonSequence, actionType, actionTypeParameters);
 }
