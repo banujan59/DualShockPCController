@@ -196,4 +196,7 @@ void CustomButtonConfiguration::GetDSButtonNames(std::map<int, std::string>& con
 	container[TRIANGLE] = "TRIANGLE";
 	container[PS_BUTTON] = "PS BUTTON";
 	container[CENTER_TOUCH_BAR] = "CENTER TOUCH BAR";
+
+	// Do not include DualShock4Buttons::NO_BUTTONS here.
+	// The UI knows there are no buttons pressed when it cannot find the matching button in the container
 }
