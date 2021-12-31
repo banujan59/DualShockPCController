@@ -24,6 +24,9 @@ public:
 	static constexpr int MAX_MOUSE_SENSITIVITY = 40;
 	static constexpr int MIN_MOUSE_SENSITIVITY = 5;
 
+	static constexpr int MAX_RUMBLE_SENSITIVITY = 4;
+	static constexpr int MIN_RUMBLE_SENSITIVITY = 0;
+
 	DualShockController();
 	~DualShockController();
 	bool ConnectToDevice();
@@ -35,6 +38,10 @@ public:
 
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor) const;
+
+	int GetCurrentRumbleSensitivity() const;
+	void SetRumbleSensitivity(int newSensitivity) const;
+	void TestRumble(int& rumbleValue) const;
 
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType) const;
 	void RemoveCustomCommand(std::string& commandName) const;

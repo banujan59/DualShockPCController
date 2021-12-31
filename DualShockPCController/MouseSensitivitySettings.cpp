@@ -10,31 +10,31 @@ MouseSensitivitySettings::MouseSensitivitySettings(DualShockController* pDualSho
 
 	ui.setupUi(this);
 
-	connect(ui.mouseSensitivitySpinBox, &QSpinBox::valueChanged,
-		[&](const int& newValue) {ui.mouseSensitivitySlider->setValue(newValue); });
+	connect(ui.sensitivitySpinBox, &QSpinBox::valueChanged,
+		[&](const int& newValue) {ui.sensitivitySlider->setValue(newValue); });
 
-	connect(ui.mouseSensitivitySlider, &QSlider::valueChanged,
-		[&](const int& newValue) {ui.mouseSensitivitySpinBox->setValue(newValue); });
+	connect(ui.sensitivitySlider, &QSlider::valueChanged,
+		[&](const int& newValue) {ui.sensitivitySpinBox->setValue(newValue); });
 
-	connect(ui.mouseSensitivitySlider, &QSlider::valueChanged, this, &MouseSensitivitySettings::HandleMouseSensitivitySliderValueChanged);
-	connect(ui.testMouseSensitivityButton, &QPushButton::clicked, this, &MouseSensitivitySettings::HandleTestMouseSensitivityFor5Seconds);
+	connect(ui.sensitivitySlider, &QSlider::valueChanged, this, &MouseSensitivitySettings::HandleMouseSensitivitySliderValueChanged);
+	connect(ui.testSensitivityButton, &QPushButton::clicked, this, &MouseSensitivitySettings::HandleTestMouseSensitivityFor5Seconds);
 
 	connect(ui.resetToDefaultButton, &QPushButton::clicked, [&]()
 		{
-			ui.mouseSensitivitySlider->setValue(m_pDualShockController->GetMouseAccelerationFactor());
+			ui.sensitivitySlider->setValue(m_pDualShockController->GetMouseAccelerationFactor());
 		});
 
-	connect(ui.applyMouseSensitivity, &QPushButton::clicked, this, &MouseSensitivitySettings::HandleMouseSensitivityApplyButtonClicked);
+	connect(ui.applySensitivity, &QPushButton::clicked, this, &MouseSensitivitySettings::HandleMouseSensitivityApplyButtonClicked);
 	connect(this, &MouseSensitivitySettings::UpdateTestButtonTextSignal,
-		[&](const QString& buttonText) { ui.testMouseSensitivityButton->setText(buttonText); });
+		[&](const QString& buttonText) { ui.testSensitivityButton->setText(buttonText); });
 
 	connect(this, &MouseSensitivitySettings::TestMouseSensitivityDoneSignal, this, &MouseSensitivitySettings::HandleTestMouseSensitivityDoneSlot);
 
-	ui.mouseSensitivitySpinBox->setRange(DualShockController::MIN_MOUSE_SENSITIVITY,
+	ui.sensitivitySpinBox->setRange(DualShockController::MIN_MOUSE_SENSITIVITY,
 		DualShockController::MAX_MOUSE_SENSITIVITY);
-	ui.mouseSensitivitySlider->setRange(DualShockController::MIN_MOUSE_SENSITIVITY,
+	ui.sensitivitySlider->setRange(DualShockController::MIN_MOUSE_SENSITIVITY,
 		DualShockController::MAX_MOUSE_SENSITIVITY);
-	ui.mouseSensitivitySpinBox->setValue(m_pDualShockController->GetMouseAccelerationFactor());
+	ui.sensitivitySpinBox->setValue(m_pDualShockController->GetMouseAccelerationFactor());
 }
 
 MouseSensitivitySettings::~MouseSensitivitySettings()
@@ -45,54 +45,54 @@ void MouseSensitivitySettings::HandleWidgetEnableStateChange(bool disableState)
 {
 	if (disableState)
 	{
-		ui.mouseSensitivityLabel->setDisabled(true);
-		ui.testMouseSensitivityButton->setDisabled(true);
+		ui.sensitivityLabel->setDisabled(true);
+		ui.testSensitivityButton->setDisabled(true);
 		ui.resetToDefaultButton->setDisabled(true);
-		ui.applyMouseSensitivity->setDisabled(true);
+		ui.applySensitivity->setDisabled(true);
 	}
 
 	else
 	{
-		ui.mouseSensitivityLabel->setDisabled(false);
-		HandleMouseSensitivitySliderValueChanged(ui.mouseSensitivitySpinBox->value());
+		ui.sensitivityLabel->setDisabled(false);
+		HandleMouseSensitivitySliderValueChanged(ui.sensitivitySpinBox->value());
 	}
 
-	ui.mouseSensitivitySpinBox->setDisabled(disableState);
-	ui.mouseSensitivitySlider->setDisabled(disableState);
+	ui.sensitivitySpinBox->setDisabled(disableState);
+	ui.sensitivitySlider->setDisabled(disableState);
 }
 
 void MouseSensitivitySettings::HandleMouseSensitivityApplyButtonClicked()
 {
-	m_pDualShockController->SetMouseAccelerationFactor(ui.mouseSensitivitySpinBox->value());
-	HandleMouseSensitivitySliderValueChanged(ui.mouseSensitivitySpinBox->value());
+	m_pDualShockController->SetMouseAccelerationFactor(ui.sensitivitySpinBox->value());
+	HandleMouseSensitivitySliderValueChanged(ui.sensitivitySpinBox->value());
 }
 
 void MouseSensitivitySettings::HandleMouseSensitivitySliderValueChanged(int newValue)
 {
 	if (newValue == m_pDualShockController->GetMouseAccelerationFactor())
 	{
-		ui.testMouseSensitivityButton->setDisabled(true);
+		ui.testSensitivityButton->setDisabled(true);
 		ui.resetToDefaultButton->setDisabled(true);
-		ui.applyMouseSensitivity->setDisabled(true);
+		ui.applySensitivity->setDisabled(true);
 	}
 
 	else
 	{
-		ui.testMouseSensitivityButton->setDisabled(false);
+		ui.testSensitivityButton->setDisabled(false);
 		ui.resetToDefaultButton->setDisabled(false);
-		ui.applyMouseSensitivity->setDisabled(false);
+		ui.applySensitivity->setDisabled(false);
 	}
 }
 
 void MouseSensitivitySettings::HandleTestMouseSensitivityFor5Seconds()
 {
-	ui.applyMouseSensitivity->setDisabled(true);
-	ui.mouseSensitivitySpinBox->setDisabled(true);
-	ui.mouseSensitivitySlider->setDisabled(true);
-	ui.testMouseSensitivityButton->setDisabled(true);
+	ui.applySensitivity->setDisabled(true);
+	ui.sensitivitySpinBox->setDisabled(true);
+	ui.sensitivitySlider->setDisabled(true);
+	ui.testSensitivityButton->setDisabled(true);
 
 	int currentValue = m_pDualShockController->GetMouseAccelerationFactor();
-	int newValue = ui.mouseSensitivitySpinBox->value();
+	int newValue = ui.sensitivitySpinBox->value();
 
 	m_testMouseSensitivityThread.reset(new std::thread([&](const int& valueToTest, const int& originalValue)
 		{
@@ -114,10 +114,10 @@ void MouseSensitivitySettings::HandleTestMouseSensitivityFor5Seconds()
 
 void MouseSensitivitySettings::HandleTestMouseSensitivityDoneSlot()
 {
-	ui.applyMouseSensitivity->setDisabled(false);
-	ui.mouseSensitivitySpinBox->setDisabled(false);
-	ui.mouseSensitivitySlider->setDisabled(false);
-	ui.testMouseSensitivityButton->setDisabled(false);
-	ui.testMouseSensitivityButton->setText("Test for 5 seconds");
+	ui.applySensitivity->setDisabled(false);
+	ui.sensitivitySpinBox->setDisabled(false);
+	ui.sensitivitySlider->setDisabled(false);
+	ui.testSensitivityButton->setDisabled(false);
+	ui.testSensitivityButton->setText("Test for 5 seconds");
 	m_testMouseSensitivityThread->detach();
 }

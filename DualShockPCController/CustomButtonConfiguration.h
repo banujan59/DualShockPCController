@@ -36,6 +36,7 @@ private:
 	std::unordered_map<int, std::function<void()>> m_cLongButtonUpFunctionMap;
 
 	int m_mouseAccelerationFactor;
+	int m_rumbleSensitivity;
 	std::string m_buttonConfigurationName;
 
 	CustomButtonSequence m_customButtonSequence;
@@ -73,8 +74,13 @@ public:
 	static void UpdateMouseWIthGyro(float gyroX, float gyroY);
 
 	std::string GetButtonLayoutName() const;
+
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor);
+
+	int GetRumbleSensitivity() const;
+	void SetRumbleSensitivity(int newSensitivity);
+	static void GetRumbleValueForDS(int& smallRuble, int& bigRumble, int& targetRumbleValue);
 
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType);
 	bool AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,

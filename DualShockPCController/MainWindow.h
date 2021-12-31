@@ -7,6 +7,7 @@
 #include "ButtonLayoutSettings.h"
 #include "GyroMouseControlSettings.h"
 #include "MouseSensitivitySettings.h"
+#include "RumbleSensitivtySettings.h"
 
 class MainWindow : public QMainWindow
 {
@@ -28,4 +29,5 @@ private:
     ButtonLayoutSettings m_buttonLayoutSettings;
     GyroMouseControlSettings m_gyroMouseControlSettings;
     MouseSensitivitySettings m_mouseSensitivitySettings;
+    RumbleSensitivtySettings m_rumbleSensitivitySettings;
 };

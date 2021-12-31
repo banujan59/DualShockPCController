@@ -9,6 +9,8 @@ namespace
 	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 10;
 	constexpr int CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY = 500;
 
+	constexpr int RUMBLE_SLEEP_DURATION_MILLISECONDS = 50;
+
 	int timeWithNoButton = 0;
 
 	bool DSButtonSequenceMode = false;
@@ -178,6 +180,26 @@ int DualShockController::GetMouseAccelerationFactor() const
 void DualShockController::SetMouseAccelerationFactor(int newFactor) const
 {
 	m_currentButtonHandler->SetMouseAccelerationFactor(newFactor);
+}
+
+int DualShockController::GetCurrentRumbleSensitivity() const
+{
+	return m_currentButtonHandler->GetRumbleSensitivity();
+}
+
+void DualShockController::SetRumbleSensitivity(int newSensitivity) const
+{
+	m_currentButtonHandler->SetRumbleSensitivity(newSensitivity);
+}
+
+void DualShockController::TestRumble(int& rumbleValue) const
+{
+	int smallRumble, bigRumble;
+	CustomButtonConfiguration::GetRumbleValueForDS(smallRumble, bigRumble, rumbleValue);
+	
+	JslSetRumble(m_nConnectedDeviceID, smallRumble, bigRumble);
+	std::this_thread::sleep_for(std::chrono::milliseconds(RUMBLE_SLEEP_DURATION_MILLISECONDS));
+	JslSetRumble(m_nConnectedDeviceID, 0, 0);
 }
 
 void DualShockController::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,

@@ -91,6 +91,9 @@
     <ClCompile Include="AddCustomCommandDialog.cpp">
       <Filter>Source Files\View\ButtonLayoutSettings</Filter>
     </ClCompile>
+    <ClCompile Include="RumbleSensitivtySettings.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -107,6 +110,9 @@
     </QtMoc>
     <QtMoc Include="AddCustomCommandDialog.h">
       <Filter>Header Files\View\ButtonLayoutSettings</Filter>
+    </QtMoc>
+    <QtMoc Include="RumbleSensitivtySettings.h">
+      <Filter>Header Files\View</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

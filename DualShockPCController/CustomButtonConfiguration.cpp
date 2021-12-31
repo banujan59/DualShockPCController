@@ -6,6 +6,7 @@
 
 CustomButtonConfiguration::CustomButtonConfiguration(std::string buttonLayoutName) :
 	m_mouseAccelerationFactor(20),
+	m_rumbleSensitivity(0),
 	m_buttonConfigurationName(std::move(buttonLayoutName)),
 	m_customButtonSequenceModeEnabled(false)
 {
@@ -139,6 +140,47 @@ int CustomButtonConfiguration::GetMouseAccelerationFactor() const
 void CustomButtonConfiguration::SetMouseAccelerationFactor(int newFactor)
 {
 	m_mouseAccelerationFactor = newFactor;
+}
+
+int CustomButtonConfiguration::GetRumbleSensitivity() const
+{
+	return m_rumbleSensitivity;
+}
+
+void CustomButtonConfiguration::SetRumbleSensitivity(int newSensitivity)
+{
+	m_rumbleSensitivity = newSensitivity;
+}
+
+void CustomButtonConfiguration::GetRumbleValueForDS(int& smallRuble, int& bigRumble, int& targetRumbleValue)
+{
+	switch(targetRumbleValue)
+	{
+	case 1:
+		smallRuble = 1;
+		bigRumble = 0;
+		break;
+
+	case 2:
+		smallRuble = 80;
+		bigRumble = 0;
+		break;
+
+	case 3:
+		smallRuble = 0;
+		bigRumble = 5;
+		break;
+
+	case 4:
+		smallRuble = 0;
+		bigRumble = 255;
+		break;
+
+	default:
+		smallRuble = 0;
+		bigRumble = 0;
+		break;
+	}
 }
 
 void CustomButtonConfiguration::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,
