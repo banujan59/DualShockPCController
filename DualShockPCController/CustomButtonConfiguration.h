@@ -36,7 +36,7 @@ private:
 	std::unordered_map<int, std::function<void()>> m_cLongButtonUpFunctionMap;
 
 	int m_mouseAccelerationFactor;
-	std::string m_buttonLayoutName;
+	std::string m_buttonConfigurationName;
 
 	CustomButtonSequence m_customButtonSequence;
 	bool m_customButtonSequenceModeEnabled;
