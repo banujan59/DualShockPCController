@@ -4,6 +4,8 @@
 DefaultConfigButtonHandler::DefaultConfigButtonHandler() :
 	CustomButtonConfiguration("Default Controller")
 {
+	SetRumbleSensitivity(1);
+
 	// X to left mouse button
 	AddButtonDownMapping(DualShock4Buttons::X, OSHelper::TriggerMouseLeftDown);
 	AddButtonUpMapping(DualShock4Buttons::X, OSHelper::TriggerMouseLeftUp);

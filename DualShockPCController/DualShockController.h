@@ -7,8 +7,10 @@ class DualShockController
 {
 private:
 	int m_nConnectedDeviceID;
-	bool m_bContinueThreadExecution;
-	std::unique_ptr<std::thread> m_pThread;
+	bool m_bContinueCaptureThreadExecution;
+	bool m_bContinueRumbleThreadExecution;
+	std::unique_ptr<std::thread> m_pCaptureDSEventThread;
+	std::unique_ptr<std::thread> m_pRumbleThread;
 	
 	int m_previousIterationButtonDown;
 	int m_timeButtonSpentDown;
@@ -19,13 +21,14 @@ private:
 	std::vector<CustomButtonConfiguration> m_availableButtonHandlers;
 
 	void _CaptureEvents();
+	void _RunDSRumble() const;
 
 public:
 	static constexpr int MAX_MOUSE_SENSITIVITY = 40;
 	static constexpr int MIN_MOUSE_SENSITIVITY = 5;
 
 	static constexpr int MAX_RUMBLE_SENSITIVITY = 4;
-	static constexpr int MIN_RUMBLE_SENSITIVITY = 0;
+	static constexpr int MIN_RUMBLE_SENSITIVITY = 0; // the minimum must always be 0. This value is used to kill the rumble thread
 
 	DualShockController();
 	~DualShockController();
@@ -40,8 +43,8 @@ public:
 	void SetMouseAccelerationFactor(int newFactor) const;
 
 	int GetCurrentRumbleSensitivity() const;
-	void SetRumbleSensitivity(int newSensitivity) const;
-	void TestRumble(int& rumbleValue) const;
+	void SetRumbleSensitivity(const unsigned int& newSensitivity);
+	void SendRumbleToDS(int& rumbleValue) const;
 
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType) const;
 	void RemoveCustomCommand(std::string& commandName) const;

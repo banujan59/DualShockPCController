@@ -36,7 +36,7 @@ private:
 	std::unordered_map<int, std::function<void()>> m_cLongButtonUpFunctionMap;
 
 	int m_mouseAccelerationFactor;
-	int m_rumbleSensitivity;
+	unsigned int m_rumbleSensitivity;
 	std::string m_buttonConfigurationName;
 
 	CustomButtonSequence m_customButtonSequence;
@@ -79,7 +79,7 @@ public:
 	void SetMouseAccelerationFactor(int newFactor);
 
 	int GetRumbleSensitivity() const;
-	void SetRumbleSensitivity(int newSensitivity);
+	void SetRumbleSensitivity(const unsigned int& newSensitivity);
 	static void GetRumbleValueForDS(int& smallRuble, int& bigRumble, int& targetRumbleValue);
 
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType);

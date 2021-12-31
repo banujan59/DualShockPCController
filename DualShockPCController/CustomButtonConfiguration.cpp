@@ -147,7 +147,7 @@ int CustomButtonConfiguration::GetRumbleSensitivity() const
 	return m_rumbleSensitivity;
 }
 
-void CustomButtonConfiguration::SetRumbleSensitivity(int newSensitivity)
+void CustomButtonConfiguration::SetRumbleSensitivity(const unsigned int& newSensitivity)
 {
 	m_rumbleSensitivity = newSensitivity;
 }

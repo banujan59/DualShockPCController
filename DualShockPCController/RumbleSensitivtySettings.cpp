@@ -83,6 +83,6 @@ void RumbleSensitivtySettings::HandleTestRumbleSensitivityClicked() const
 {
 	ui.testSensitivityButton->setDisabled(true);
 	int rumbleValue = ui.sensitivitySpinBox->value();
-	m_pDualShockController->TestRumble(rumbleValue);
+	m_pDualShockController->SendRumbleToDS(rumbleValue);
 	ui.testSensitivityButton->setDisabled(false);
 }
