@@ -6,7 +6,7 @@
 
 CustomButtonConfiguration::CustomButtonConfiguration(std::string buttonLayoutName) :
 	m_mouseAccelerationFactor(20),
-	m_buttonLayoutName(std::move(buttonLayoutName)),
+	m_buttonConfigurationName(std::move(buttonLayoutName)),
 	m_customButtonSequenceModeEnabled(false)
 {
 }
@@ -127,7 +127,7 @@ void CustomButtonConfiguration::UpdateMouseWIthGyro(float gyroX, float gyroY)
 
 std::string CustomButtonConfiguration::GetButtonLayoutName() const
 {
-	return m_buttonLayoutName;
+	return m_buttonConfigurationName;
 }
 
 
