@@ -21,6 +21,9 @@ private:
 	void _CaptureEvents();
 
 public:
+	static constexpr int MAX_MOUSE_SENSITIVITY = 40;
+	static constexpr int MIN_MOUSE_SENSITIVITY = 5;
+
 	DualShockController();
 	~DualShockController();
 	bool ConnectToDevice();
@@ -32,9 +35,6 @@ public:
 
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor) const;
-
-	static int GetMaxMouseSensitivityFactor();
-	static int GetMinMouseSensitivityFactor();
 
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType) const;
 	void RemoveCustomCommand(std::string& commandName) const;

@@ -30,10 +30,10 @@ MouseSensitivitySettings::MouseSensitivitySettings(DualShockController* pDualSho
 
 	connect(this, &MouseSensitivitySettings::TestMouseSensitivityDoneSignal, this, &MouseSensitivitySettings::HandleTestMouseSensitivityDoneSlot);
 
-	ui.mouseSensitivitySpinBox->setRange(DualShockController::GetMinMouseSensitivityFactor(),
-		DualShockController::GetMaxMouseSensitivityFactor());
-	ui.mouseSensitivitySlider->setRange(DualShockController::GetMinMouseSensitivityFactor(),
-		DualShockController::GetMaxMouseSensitivityFactor());
+	ui.mouseSensitivitySpinBox->setRange(DualShockController::MIN_MOUSE_SENSITIVITY,
+		DualShockController::MAX_MOUSE_SENSITIVITY);
+	ui.mouseSensitivitySlider->setRange(DualShockController::MIN_MOUSE_SENSITIVITY,
+		DualShockController::MAX_MOUSE_SENSITIVITY);
 	ui.mouseSensitivitySpinBox->setValue(m_pDualShockController->GetMouseAccelerationFactor());
 }
 

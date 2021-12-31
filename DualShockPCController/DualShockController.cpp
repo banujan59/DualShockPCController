@@ -8,8 +8,6 @@ namespace
 {
 	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 10;
 	constexpr int CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY = 500;
-	constexpr int MAX_MOUSE_SENSITIVITY = 40;
-	constexpr int MIN_MOUSE_SENSITIVITY = 5;
 
 	int timeWithNoButton = 0;
 
@@ -180,16 +178,6 @@ int DualShockController::GetMouseAccelerationFactor() const
 void DualShockController::SetMouseAccelerationFactor(int newFactor) const
 {
 	m_currentButtonHandler->SetMouseAccelerationFactor(newFactor);
-}
-
-int DualShockController::GetMaxMouseSensitivityFactor()
-{
-	return MAX_MOUSE_SENSITIVITY;
-}
-
-int DualShockController::GetMinMouseSensitivityFactor()
-{
-	return MIN_MOUSE_SENSITIVITY;
 }
 
 void DualShockController::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,
