@@ -1,6 +1,8 @@
 #include "ButtonLayoutSettings.h"
 #include "AddCustomCommandDialog.h"
 
+#include <QMessageBox>
+
 ButtonLayoutSettings::ButtonLayoutSettings(DualShockController* pDualShockController, QWidget *parent)
 	: QWidget(parent),
 	m_pDualShockController(pDualShockController)
@@ -115,20 +117,30 @@ void ButtonLayoutSettings::HandleAddSequenceButtonClicked() const
 		}
 
 
-		m_pDualShockController->AddNewCustomCommand(commandName, buttonSequence, actionType, actionTypeParameters);
-
-		std::vector<std::string> buttonSequeneNames = addCustomCommandDialog.GetButtonSequenceNames();
-		std::string buttons = "";
-		for(auto it = buttonSequeneNames.begin() ; it != buttonSequeneNames.end() ; it++)
+		if(m_pDualShockController->AddNewCustomCommand(commandName, buttonSequence, actionType, actionTypeParameters))
 		{
-			buttons += *it;
+			std::vector<std::string> buttonSequeneNames = addCustomCommandDialog.GetButtonSequenceNames();
+			std::string buttons = "";
+			for (auto it = buttonSequeneNames.begin(); it != buttonSequeneNames.end(); it++)
+			{
+				buttons += *it;
 
-			if(it != buttonSequeneNames.end() - 1)
-				buttons += ",";
+				if (it != buttonSequeneNames.end() - 1)
+					buttons += ",";
+			}
+
+			m_buttonSequenceTableModel->InsertRow(commandName, buttons, addCustomCommandDialog.GetActionTypeName());
+			ui.sequenceView->scrollToBottom();
 		}
 
-		m_buttonSequenceTableModel->InsertRow(commandName, buttons, addCustomCommandDialog.GetActionTypeName());
-		ui.sequenceView->scrollToBottom();
+		else
+		{
+			QMessageBox msgBox;
+			msgBox.setText(QString("Could not add custom command. Causes:\n%1%2").arg("1) Make sure name is unique\n",
+				"2) Make sure the sequence is not already used by another custom command."));
+			msgBox.setIcon(QMessageBox::Critical);
+			msgBox.exec();
+		}
 	}
 }
 

@@ -213,10 +213,11 @@ void DualShockController::GetDSButtonNames(std::map<int, std::string>& container
 	CustomButtonConfiguration::GetDSButtonNames(container);
 }
 
-void DualShockController::AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence, CustomButtonSequence::ActionType& actionType, std::vector<
-                                              std::string>& actionTypeParameters) const
+bool DualShockController::AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,
+                                              CustomButtonSequence::ActionType& actionType, std::vector<
+	                                              std::string>& actionTypeParameters) const
 {
-	m_currentButtonHandler->AddNewCustomCommand(commmandName, buttonSequence, actionType, actionTypeParameters);
+	return m_currentButtonHandler->AddNewCustomCommand(commmandName, buttonSequence, actionType, actionTypeParameters);
 }
 
 void DualShockController::SetDSButtonSequenceMode(bool state)

@@ -1,5 +1,6 @@
 #include "CustomButtonConfiguration.h"
 
+#include <filesystem>
 #include <utility>
 #include "OSHelper.h"
 
@@ -159,8 +160,9 @@ void CustomButtonConfiguration::GetAllCustomCommands(std::vector<std::string>& c
 	m_customButtonSequence.GetAllCustomCommands(commandNames, buttonList, actionType);
 }
 
-void CustomButtonConfiguration::AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence, CustomButtonSequence::ActionType& actionType,
-	std::vector<std::string>& actionTypeParameters)
+bool CustomButtonConfiguration::AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,
+                                                    CustomButtonSequence::ActionType& actionType,
+                                                    std::vector<std::string>& actionTypeParameters)
 {
 	std::function<void()> functionToExecute;
 
@@ -171,13 +173,14 @@ void CustomButtonConfiguration::AddNewCustomCommand(std::string& commmandName, s
 		{
 			for (std::string filesToOpen : actionTypeParameters)
 			{
-				OSHelper::ExecuteApplication(filesToOpen);
+				if (std::filesystem::exists(filesToOpen))
+					OSHelper::ExecuteApplication(filesToOpen);
 			}
 		};
 		break;
 	}
 
-	m_customButtonSequence.AddCommand(commmandName, buttonSequence, functionToExecute, actionType);
+	return m_customButtonSequence.AddCommand(commmandName, buttonSequence, functionToExecute, actionType);
 }
 
 void CustomButtonConfiguration::RemoveCustomCommand(std::string& commandName)

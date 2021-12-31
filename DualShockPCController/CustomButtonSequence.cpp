@@ -38,6 +38,9 @@ bool CustomButtonSequence::AddCommand(const std::string& commandName, const std:
 
 		if (i == buttonList.size() - 1)
 		{
+			if(!currentNode->actionName.empty())
+				return false; // already an action at this sequence
+
 			currentNode->actionName = commandName;
 		}
 	}

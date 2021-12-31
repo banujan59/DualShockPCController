@@ -40,8 +40,9 @@ public:
 	void RemoveCustomCommand(std::string& commandName) const;
 	static void GetCustomCommandsActions(std::map<CustomButtonSequence::ActionType, std::string>& container);
 	static void GetDSButtonNames(std::map<int, std::string>& container);
-	void AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence, CustomButtonSequence::ActionType& actionType, std::vector<
-	                         std::string>& actionTypeParameters) const;
+	bool AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,
+	                         CustomButtonSequence::ActionType& actionType, std::vector<
+		                         std::string>& actionTypeParameters) const;
 
 	void SetDSButtonSequenceMode(bool state);
 	int GetLatestButtonDown() const;
