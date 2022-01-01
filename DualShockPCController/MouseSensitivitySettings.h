@@ -27,7 +27,7 @@ signals:
 	void TestMouseSensitivityDoneSignal();
 
 private:
-	Ui::MouseSensitivitySettings ui;
+	Ui::SensitivitySettings ui;
 	DualShockController* m_pDualShockController;
 	std::unique_ptr<std::thread> m_testMouseSensitivityThread;
 };

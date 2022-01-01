@@ -1,13 +1,16 @@
 #include "DualShockController.h"
 #include "JoyShockLibrary.h"
-#include "OSHelper.h"
 
 #include <iostream>
+#include <semaphore>
 
 namespace 
 {
 	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 10;
 	constexpr int CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY = 500;
+
+	constexpr int RUMBLE_SLEEP_DURATION_MILLISECONDS = 50;
+	std::binary_semaphore rumbleSemaphore{ 0 };
 
 	int timeWithNoButton = 0;
 
@@ -26,8 +29,9 @@ namespace
 
 DualShockController::DualShockController() :
 	m_nConnectedDeviceID(-1),
-	m_bContinueThreadExecution(false),
-	m_pThread(nullptr),
+	m_bContinueCaptureThreadExecution(false),
+	m_pCaptureDSEventThread(nullptr),
+	m_pRumbleThread(nullptr),
 	m_previousIterationButtonDown(0),
 	m_timeButtonSpentDown(0),
 	m_gyroControlledMouseEnabled(false)
@@ -37,15 +41,25 @@ DualShockController::DualShockController() :
 
 	// Load the default button handler on startup
 	m_currentButtonHandler = &m_availableButtonHandlers[0];
+
+	// small trick to start the rumble thread. (I know, not ideal...)
+	SetRumbleSensitivity( m_currentButtonHandler->GetRumbleSensitivity() ); 
 }
 
 DualShockController::~DualShockController()
 {
 	// stop thread function and wait for it to finish
-	if(m_pThread != nullptr)
+	if(m_pCaptureDSEventThread != nullptr)
 	{
-		m_bContinueThreadExecution = false;
-		m_pThread->join();
+		m_bContinueCaptureThreadExecution = false;
+		m_pCaptureDSEventThread->join();
+	}
+
+	if(m_pRumbleThread != nullptr)
+	{
+		m_bContinueRumbleThreadExecution = false;
+		rumbleSemaphore.release();
+		m_pRumbleThread->join();
 	}
 
 	JslDisconnectAndDisposeAll();
@@ -71,8 +85,8 @@ bool DualShockController::ConnectToDevice()
 			{
 				m_nConnectedDeviceID = pDeviceHandleArray.get()[i];
 
-				m_bContinueThreadExecution = true;
-				m_pThread.reset(new std::thread(&DualShockController::_CaptureEvents, this));
+				m_bContinueCaptureThreadExecution = true;
+				m_pCaptureDSEventThread.reset(new std::thread(&DualShockController::_CaptureEvents, this));
 				return true;
 			}
 		}
@@ -85,7 +99,7 @@ bool DualShockController::ConnectToDevice()
 
 void DualShockController::_CaptureEvents()
 {
-	while(m_bContinueThreadExecution)
+	while(m_bContinueCaptureThreadExecution)
 	{
 		const JOY_SHOCK_STATE joyState = JslGetSimpleState(m_nConnectedDeviceID);
 		
@@ -108,6 +122,10 @@ void DualShockController::_CaptureEvents()
 			if(!DSButtonSequenceMode)
 			{
 				m_currentButtonHandler->OnKeyUp(m_previousIterationButtonDown, m_timeButtonSpentDown);
+
+				if (m_bContinueRumbleThreadExecution)
+					rumbleSemaphore.release();
+
 				m_timeButtonSpentDown = 0;
 				m_currentButtonHandler->OnKeyDown(joyState.buttons);
 
@@ -133,6 +151,21 @@ void DualShockController::_CaptureEvents()
 
 		m_previousIterationButtonDown = joyState.buttons;
 		std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS));
+	}
+}
+
+void DualShockController::_RunDSRumble() const
+{
+	while(m_bContinueRumbleThreadExecution)
+	{
+		rumbleSemaphore.acquire();
+
+		// the semaphore could have been released to end this thread
+		if(m_bContinueRumbleThreadExecution)
+		{
+			int rumbleValue = m_currentButtonHandler->GetRumbleSensitivity();
+			SendRumbleToDS(rumbleValue);
+		}
 	}
 }
 
@@ -178,6 +211,40 @@ int DualShockController::GetMouseAccelerationFactor() const
 void DualShockController::SetMouseAccelerationFactor(int newFactor) const
 {
 	m_currentButtonHandler->SetMouseAccelerationFactor(newFactor);
+}
+
+int DualShockController::GetCurrentRumbleSensitivity() const
+{
+	return m_currentButtonHandler->GetRumbleSensitivity();
+}
+
+void DualShockController::SetRumbleSensitivity(const unsigned int& newSensitivity)
+{
+	if(newSensitivity == MIN_RUMBLE_SENSITIVITY && m_pRumbleThread != nullptr)
+	{
+		m_bContinueRumbleThreadExecution = false;
+		rumbleSemaphore.release();
+		m_pRumbleThread->join();
+		m_pRumbleThread.reset(nullptr);
+	}
+
+	else if(m_pRumbleThread == nullptr)
+	{
+		m_bContinueRumbleThreadExecution = true;
+		m_pRumbleThread.reset(new std::thread(&DualShockController::_RunDSRumble, this));
+	}
+
+	m_currentButtonHandler->SetRumbleSensitivity(newSensitivity);
+}
+
+void DualShockController::SendRumbleToDS(int& rumbleValue) const
+{
+	int smallRumble, bigRumble;
+	CustomButtonConfiguration::GetRumbleValueForDS(smallRumble, bigRumble, rumbleValue);
+
+	JslSetRumble(m_nConnectedDeviceID, smallRumble, bigRumble);
+	std::this_thread::sleep_for(std::chrono::milliseconds(RUMBLE_SLEEP_DURATION_MILLISECONDS));
+	JslSetRumble(m_nConnectedDeviceID, 0, 0);
 }
 
 void DualShockController::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,

@@ -107,6 +107,7 @@
     <ClCompile Include="GyroMouseControlSettings.cpp" />
     <ClCompile Include="MouseSensitivitySettings.cpp" />
     <ClCompile Include="OSHelper.cpp" />
+    <ClCompile Include="RumbleSensitivtySettings.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="AddCustomCommandDialog.ui" />
     <QtUic Include="ButtonLayoutSettings.ui" />
@@ -116,9 +117,10 @@
     <ClCompile Include="DualShockController.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
-    <QtUic Include="MouseSensitivitySettings.ui" />
+    <QtUic Include="SensitivitySettings.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="RumbleSensitivtySettings.h" />
     <QtMoc Include="ButtonLayoutSettings.h" />
     <QtMoc Include="AddCustomCommandDialog.h" />
     <ClInclude Include="CustomButtonSequence.h" />
