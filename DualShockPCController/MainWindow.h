@@ -5,6 +5,7 @@
 
 #include "DualShockController.h"
 #include "ButtonLayoutSettings.h"
+#include "LightBarColorSettings.h"
 #include "GyroMouseControlSettings.h"
 #include "MouseSensitivitySettings.h"
 #include "RumbleSensitivtySettings.h"
@@ -27,6 +28,7 @@ private:
 	DualShockController* m_pDualShockController;
 
     ButtonLayoutSettings m_buttonLayoutSettings;
+    LightBarColorSettings m_lightBarColorSettings;
     GyroMouseControlSettings m_gyroMouseControlSettings;
     MouseSensitivitySettings m_mouseSensitivitySettings;
     RumbleSensitivtySettings m_rumbleSensitivitySettings;

@@ -105,6 +105,7 @@
     <ClCompile Include="CustomButtonConfiguration.cpp" />
     <ClCompile Include="DefaultConfigButtonHandler.cpp" />
     <ClCompile Include="GyroMouseControlSettings.cpp" />
+    <ClCompile Include="LightBarColorSettings.cpp" />
     <ClCompile Include="MouseSensitivitySettings.cpp" />
     <ClCompile Include="OSHelper.cpp" />
     <ClCompile Include="RumbleSensitivtySettings.cpp" />
@@ -112,6 +113,7 @@
     <QtUic Include="AddCustomCommandDialog.ui" />
     <QtUic Include="ButtonLayoutSettings.ui" />
     <QtUic Include="GyroMouseControlSettings.ui" />
+    <QtUic Include="LightBarColorSettings.ui" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
     <ClCompile Include="DualShockController.cpp" />
@@ -130,6 +132,7 @@
     <QtMoc Include="GyroMouseControlSettings.h" />
     <ClInclude Include="JoyShockLibrary.h" />
     <QtMoc Include="MouseSensitivitySettings.h" />
+    <QtMoc Include="LightBarColorSettings.h" />
     <ClInclude Include="OSHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

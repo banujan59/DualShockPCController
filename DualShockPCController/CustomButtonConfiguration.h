@@ -26,6 +26,12 @@ enum DualShock4Buttons
 	CENTER_TOUCH_BAR = 0x20000
 };
 
+enum class LightBarMode
+{
+	SINGLE_COLOR,
+	RANDOM_COLOR
+};
+
 class CustomButtonConfiguration
 {
 private:
@@ -41,6 +47,10 @@ private:
 
 	CustomButtonSequence m_customButtonSequence;
 	bool m_customButtonSequenceModeEnabled;
+
+	int m_lightBarColor;
+	bool m_lightBarFadeEnabled;
+	LightBarMode m_lightBarMode;
 
 public:
 	CustomButtonConfiguration(std::string buttonLayoutName);
@@ -81,6 +91,12 @@ public:
 	int GetRumbleSensitivity() const;
 	void SetRumbleSensitivity(const unsigned int& newSensitivity);
 	static void GetRumbleValueForDS(int& smallRuble, int& bigRumble, int& targetRumbleValue);
+
+	int GetLightBarColor();
+	void GetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue);
+	void GetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled);
+	void SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue);
+	void SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled);
 
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType);
 	bool AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,

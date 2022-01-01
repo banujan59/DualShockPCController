@@ -46,6 +46,11 @@ public:
 	void SetRumbleSensitivity(const unsigned int& newSensitivity);
 	void SendRumbleToDS(int& rumbleValue) const;
 
+	void GetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const;
+	void GetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled) const;
+	void SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const;
+	void SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled) const;
+
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType) const;
 	void RemoveCustomCommand(std::string& commandName) const;
 	static void GetCustomCommandsActions(std::map<CustomButtonSequence::ActionType, std::string>& container);

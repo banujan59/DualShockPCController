@@ -94,6 +94,9 @@
     <ClCompile Include="RumbleSensitivtySettings.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
+    <ClCompile Include="LightBarColorSettings.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -112,6 +115,9 @@
       <Filter>Header Files\View\ButtonLayoutSettings</Filter>
     </QtMoc>
     <QtMoc Include="RumbleSensitivtySettings.h">
+      <Filter>Header Files\View</Filter>
+    </QtMoc>
+    <QtMoc Include="LightBarColorSettings.h">
       <Filter>Header Files\View</Filter>
     </QtMoc>
   </ItemGroup>
@@ -147,6 +153,9 @@
     </QtUic>
     <QtUic Include="AddCustomCommandDialog.ui">
       <Filter>Form Files\ButtonLayoutSettings</Filter>
+    </QtUic>
+    <QtUic Include="LightBarColorSettings.ui">
+      <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
 </Project>

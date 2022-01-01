@@ -8,7 +8,10 @@ CustomButtonConfiguration::CustomButtonConfiguration(std::string buttonLayoutNam
 	m_mouseAccelerationFactor(20),
 	m_rumbleSensitivity(0),
 	m_buttonConfigurationName(std::move(buttonLayoutName)),
-	m_customButtonSequenceModeEnabled(false)
+	m_customButtonSequenceModeEnabled(false),
+	m_lightBarColor(255),
+	m_lightBarFadeEnabled(false),
+	m_lightBarMode(LightBarMode::SINGLE_COLOR)
 {
 }
 
@@ -182,6 +185,36 @@ void CustomButtonConfiguration::GetRumbleValueForDS(int& smallRuble, int& bigRum
 		break;
 	}
 }
+
+int CustomButtonConfiguration::GetLightBarColor()
+{
+	return m_lightBarColor;
+}
+
+void CustomButtonConfiguration::GetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue)
+{
+	red = (m_lightBarColor >> 16) & 0xFF;
+	green = (m_lightBarColor >> 8) & 0xFF;
+	blue = m_lightBarColor & 0xFF;
+}
+
+void CustomButtonConfiguration::GetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled)
+{
+	fadeEnabled = m_lightBarFadeEnabled;
+	lightBarMode = m_lightBarMode;
+}
+
+void CustomButtonConfiguration::SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue)
+{
+	m_lightBarColor = red << 16 | green << 8 | blue;
+}
+
+void CustomButtonConfiguration::SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled)
+{
+	m_lightBarFadeEnabled = fadeEnabled;
+	m_lightBarMode = lightBarMode;
+}
+
 
 void CustomButtonConfiguration::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,
                                                      std::vector<std::string>& actionType)

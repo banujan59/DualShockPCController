@@ -5,6 +5,7 @@ MainWindow::MainWindow(DualShockController* pDualShockController, QWidget* paren
 	QMainWindow(parent),
 	m_pDualShockController(pDualShockController),
 	m_buttonLayoutSettings(ButtonLayoutSettings(pDualShockController)),
+	m_lightBarColorSettings(LightBarColorSettings(pDualShockController)),
 	m_gyroMouseControlSettings(GyroMouseControlSettings(pDualShockController)),
 	m_mouseSensitivitySettings(MouseSensitivitySettings(pDualShockController)),
 	m_rumbleSensitivitySettings(RumbleSensitivtySettings(pDualShockController))
@@ -25,6 +26,7 @@ MainWindow::MainWindow(DualShockController* pDualShockController, QWidget* paren
 		ui.setupUi(this);
 
 		ui.gridLayout->addWidget(&m_buttonLayoutSettings, 1, 0, 1, 2);
+		ui.gridLayout->addWidget(&m_lightBarColorSettings,1,3,7,2);
 		ui.gridLayout->addWidget(&m_gyroMouseControlSettings, 3, 0, 2, 1);
 		ui.gridLayout->addWidget(&m_mouseSensitivitySettings, 2, 1, 4, 2);
 		ui.gridLayout->addWidget(&m_rumbleSensitivitySettings, 2, 3, 4, 2);
@@ -32,6 +34,7 @@ MainWindow::MainWindow(DualShockController* pDualShockController, QWidget* paren
 		// connect WidgetEnableStateChangeSignal signal
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, this, &MainWindow::HandleWidgetEnableStateChange);
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_buttonLayoutSettings, &ButtonLayoutSettings::HandleWidgetEnableStateChange);
+		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_lightBarColorSettings, &LightBarColorSettings::HandleWidgetEnableStateChange);
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_gyroMouseControlSettings, &GyroMouseControlSettings::HandleWidgetEnableStateChange);
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_mouseSensitivitySettings, &MouseSensitivitySettings::HandleWidgetEnableStateChange);
 		connect(this, &MainWindow::WidgetEnableStateChangeSignal, &m_rumbleSensitivitySettings, &RumbleSensitivtySettings::HandleWidgetEnableStateChange);

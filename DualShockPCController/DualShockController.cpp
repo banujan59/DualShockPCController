@@ -247,6 +247,26 @@ void DualShockController::SendRumbleToDS(int& rumbleValue) const
 	JslSetRumble(m_nConnectedDeviceID, 0, 0);
 }
 
+void DualShockController::GetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const
+{
+	m_currentButtonHandler->GetRGBLightBarColor(red, green, blue);
+}
+
+void DualShockController::GetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled) const
+{
+	m_currentButtonHandler->GetLightBarMode(lightBarMode, fadeEnabled);
+}
+
+void DualShockController::SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const
+{
+	m_currentButtonHandler->SetRGBLightBarColor(red, green, blue);
+}
+
+void DualShockController::SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled) const
+{
+	m_currentButtonHandler->SetLightBarMode(lightBarMode, fadeEnabled);
+}
+
 void DualShockController::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,
                                                std::vector<std::string>& actionType) const
 {
