@@ -2,6 +2,7 @@
 #include "JoyShockLibrary.h"
 
 #include <iostream>
+#include <random>
 #include <semaphore>
 
 namespace 
@@ -10,7 +11,7 @@ namespace
 	constexpr int CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY = 500;
 
 	constexpr int RUMBLE_SLEEP_DURATION_MILLISECONDS = 50;
-	std::binary_semaphore rumbleSemaphore{ 0 };
+	std::binary_semaphore rumbleAndRandomLightColorSemaphore{ 0 };
 
 	int timeWithNoButton = 0;
 
@@ -31,7 +32,7 @@ DualShockController::DualShockController() :
 	m_nConnectedDeviceID(-1),
 	m_bContinueCaptureThreadExecution(false),
 	m_pCaptureDSEventThread(nullptr),
-	m_pRumbleThread(nullptr),
+	m_pRumbleAndRandomColorThread(nullptr),
 	m_previousIterationButtonDown(0),
 	m_timeButtonSpentDown(0),
 	m_gyroControlledMouseEnabled(false)
@@ -42,8 +43,7 @@ DualShockController::DualShockController() :
 	// Load the default button handler on startup
 	m_currentButtonHandler = &m_availableButtonHandlers[0];
 
-	// small trick to start the rumble thread. (I know, not ideal...)
-	SetRumbleSensitivity( m_currentButtonHandler->GetRumbleSensitivity() ); 
+	UpdateRumbleAndRandomLightColorThread();
 }
 
 DualShockController::~DualShockController()
@@ -55,11 +55,11 @@ DualShockController::~DualShockController()
 		m_pCaptureDSEventThread->join();
 	}
 
-	if(m_pRumbleThread != nullptr)
+	if(m_pRumbleAndRandomColorThread != nullptr)
 	{
-		m_bContinueRumbleThreadExecution = false;
-		rumbleSemaphore.release();
-		m_pRumbleThread->join();
+		m_bContinueRumbleAndRandomColorThreadExecution = false;
+		rumbleAndRandomLightColorSemaphore.release();
+		m_pRumbleAndRandomColorThread->join();
 	}
 
 	JslDisconnectAndDisposeAll();
@@ -87,6 +87,8 @@ bool DualShockController::ConnectToDevice()
 
 				m_bContinueCaptureThreadExecution = true;
 				m_pCaptureDSEventThread.reset(new std::thread(&DualShockController::_CaptureEvents, this));
+
+				SetLightBarColor();
 				return true;
 			}
 		}
@@ -123,8 +125,8 @@ void DualShockController::_CaptureEvents()
 			{
 				m_currentButtonHandler->OnKeyUp(m_previousIterationButtonDown, m_timeButtonSpentDown);
 
-				if (m_bContinueRumbleThreadExecution)
-					rumbleSemaphore.release();
+				if (m_bContinueRumbleAndRandomColorThreadExecution)
+					rumbleAndRandomLightColorSemaphore.release();
 
 				m_timeButtonSpentDown = 0;
 				m_currentButtonHandler->OnKeyDown(joyState.buttons);
@@ -154,17 +156,33 @@ void DualShockController::_CaptureEvents()
 	}
 }
 
-void DualShockController::_RunDSRumble() const
+void DualShockController::_CaptureRumbleAndRandomLightColor() const
 {
-	while(m_bContinueRumbleThreadExecution)
+	while(m_bContinueRumbleAndRandomColorThreadExecution)
 	{
-		rumbleSemaphore.acquire();
+		rumbleAndRandomLightColorSemaphore.acquire();
 
 		// the semaphore could have been released to end this thread
-		if(m_bContinueRumbleThreadExecution)
+		if(m_bContinueRumbleAndRandomColorThreadExecution)
 		{
+			if(m_currentButtonHandler->GetLightBarMode() == LightBarMode::RANDOM_COLOR)
+			{
+				std::random_device dev;
+				std::mt19937 rng(dev());
+				std::uniform_int_distribution<std::mt19937::result_type> dist(0, 255);
+
+				uint8_t red = dist(rng);
+				uint8_t green = dist(rng);
+				uint8_t blue = dist(rng);
+
+				int color = (red << 16) | (green << 8) | blue;
+				JslSetLightColour(m_nConnectedDeviceID, color);
+			}
+
+			
 			int rumbleValue = m_currentButtonHandler->GetRumbleSensitivity();
-			SendRumbleToDS(rumbleValue);
+			if(rumbleValue > MIN_RUMBLE_SENSITIVITY)
+				SendRumbleToDS(rumbleValue);
 		}
 	}
 }
@@ -220,21 +238,28 @@ int DualShockController::GetCurrentRumbleSensitivity() const
 
 void DualShockController::SetRumbleSensitivity(const unsigned int& newSensitivity)
 {
-	if(newSensitivity == MIN_RUMBLE_SENSITIVITY && m_pRumbleThread != nullptr)
-	{
-		m_bContinueRumbleThreadExecution = false;
-		rumbleSemaphore.release();
-		m_pRumbleThread->join();
-		m_pRumbleThread.reset(nullptr);
-	}
-
-	else if(m_pRumbleThread == nullptr)
-	{
-		m_bContinueRumbleThreadExecution = true;
-		m_pRumbleThread.reset(new std::thread(&DualShockController::_RunDSRumble, this));
-	}
-
 	m_currentButtonHandler->SetRumbleSensitivity(newSensitivity);
+	UpdateRumbleAndRandomLightColorThread();
+}
+
+void DualShockController::UpdateRumbleAndRandomLightColorThread()
+{
+	const unsigned int rumbleSensitivity = m_currentButtonHandler->GetRumbleSensitivity();
+	const LightBarMode lightBarMode = m_currentButtonHandler->GetLightBarMode();
+
+	if ((rumbleSensitivity == MIN_RUMBLE_SENSITIVITY && lightBarMode != LightBarMode::RANDOM_COLOR) && m_pRumbleAndRandomColorThread != nullptr)
+	{
+		m_bContinueRumbleAndRandomColorThreadExecution = false;
+		rumbleAndRandomLightColorSemaphore.release();
+		m_pRumbleAndRandomColorThread->join();
+		m_pRumbleAndRandomColorThread.reset(nullptr);
+	}
+
+	else if ((rumbleSensitivity > MIN_RUMBLE_SENSITIVITY || lightBarMode == LightBarMode::RANDOM_COLOR) && m_pRumbleAndRandomColorThread == nullptr)
+	{
+		m_bContinueRumbleAndRandomColorThreadExecution = true;
+		m_pRumbleAndRandomColorThread.reset(new std::thread(&DualShockController::_CaptureRumbleAndRandomLightColor, this));
+	}
 }
 
 void DualShockController::SendRumbleToDS(int& rumbleValue) const
@@ -252,19 +277,33 @@ void DualShockController::GetRGBLightBarColor(uint8_t& red, uint8_t& green, uint
 	m_currentButtonHandler->GetRGBLightBarColor(red, green, blue);
 }
 
-void DualShockController::GetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled) const
+LightBarMode DualShockController::GetLightBarMode() const
 {
-	m_currentButtonHandler->GetLightBarMode(lightBarMode, fadeEnabled);
+	return m_currentButtonHandler->GetLightBarMode();
+}
+
+bool DualShockController::GetLightBarFadeEnabled() const
+{
+	return m_currentButtonHandler->GetLightBarFadeEnabled();
 }
 
 void DualShockController::SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const
 {
 	m_currentButtonHandler->SetRGBLightBarColor(red, green, blue);
+	SetLightBarColor();
 }
 
-void DualShockController::SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled) const
+void DualShockController::SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled)
 {
 	m_currentButtonHandler->SetLightBarMode(lightBarMode, fadeEnabled);
+	SetLightBarColor();
+	UpdateRumbleAndRandomLightColorThread();
+}
+
+void DualShockController::SetLightBarColor() const
+{
+	if (m_currentButtonHandler->GetLightBarMode() == LightBarMode::SINGLE_COLOR)
+		JslSetLightColour(m_nConnectedDeviceID, m_currentButtonHandler->GetLightBarColor());
 }
 
 void DualShockController::GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList,

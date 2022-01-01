@@ -94,7 +94,8 @@ public:
 
 	int GetLightBarColor();
 	void GetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue);
-	void GetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled);
+	LightBarMode GetLightBarMode();
+	bool GetLightBarFadeEnabled();
 	void SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue);
 	void SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled);
 

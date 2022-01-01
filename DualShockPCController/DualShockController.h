@@ -8,9 +8,9 @@ class DualShockController
 private:
 	int m_nConnectedDeviceID;
 	bool m_bContinueCaptureThreadExecution;
-	bool m_bContinueRumbleThreadExecution;
+	bool m_bContinueRumbleAndRandomColorThreadExecution;
 	std::unique_ptr<std::thread> m_pCaptureDSEventThread;
-	std::unique_ptr<std::thread> m_pRumbleThread;
+	std::unique_ptr<std::thread> m_pRumbleAndRandomColorThread;
 	
 	int m_previousIterationButtonDown;
 	int m_timeButtonSpentDown;
@@ -21,7 +21,10 @@ private:
 	std::vector<CustomButtonConfiguration> m_availableButtonHandlers;
 
 	void _CaptureEvents();
-	void _RunDSRumble() const;
+	void _CaptureRumbleAndRandomLightColor() const;
+
+	void SetLightBarColor() const;
+	void UpdateRumbleAndRandomLightColorThread();
 
 public:
 	static constexpr int MAX_MOUSE_SENSITIVITY = 40;
@@ -47,9 +50,10 @@ public:
 	void SendRumbleToDS(int& rumbleValue) const;
 
 	void GetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const;
-	void GetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled) const;
+	LightBarMode GetLightBarMode() const;
+	bool GetLightBarFadeEnabled() const;
 	void SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const;
-	void SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled) const;
+	void SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled);
 
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType) const;
 	void RemoveCustomCommand(std::string& commandName) const;

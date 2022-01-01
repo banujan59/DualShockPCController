@@ -13,9 +13,10 @@ public:
 	~LightBarColorSettings();
 
 public slots:
-	void HandleWidgetEnableStateChange(bool disableState);
+	void HandleWidgetEnableStateChange(bool disableState) const;
 
 private slots:
+	void HandleRandomColorRadioButtonToggled(bool checked);
 	void HandleChooseColorButtonClicked();
 
 private:
@@ -24,7 +25,8 @@ private:
 	uint8_t m_redValue;
 	uint8_t m_greenValue;
 	uint8_t m_blueValue;
-	bool m_fadeColor;
+	LightBarMode m_lightBarMode;
+	bool m_fadeColorEnabled;
 
-	void UpdateColorPreview();
+	void UpdateColorPreview() const;
 };

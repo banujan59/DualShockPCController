@@ -198,10 +198,14 @@ void CustomButtonConfiguration::GetRGBLightBarColor(uint8_t& red, uint8_t& green
 	blue = m_lightBarColor & 0xFF;
 }
 
-void CustomButtonConfiguration::GetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled)
+LightBarMode CustomButtonConfiguration::GetLightBarMode()
 {
-	fadeEnabled = m_lightBarFadeEnabled;
-	lightBarMode = m_lightBarMode;
+	return m_lightBarMode;
+}
+
+bool CustomButtonConfiguration::GetLightBarFadeEnabled()
+{
+	return m_lightBarFadeEnabled;;
 }
 
 void CustomButtonConfiguration::SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue)
