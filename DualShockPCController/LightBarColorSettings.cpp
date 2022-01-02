@@ -30,10 +30,15 @@ LightBarColorSettings::LightBarColorSettings(DualShockController* pDualShockCont
 
 			else
 				m_fadeColorEnabled = true;
+
+			m_pDualShockController->SetLightBarMode(m_lightBarMode, m_fadeColorEnabled);
 		}
 	);
 
 	UpdateColorPreview();
+
+	// TODO implement this feature
+	ui.fadeColorCheckBox->hide();
 }
 
 LightBarColorSettings::~LightBarColorSettings()
