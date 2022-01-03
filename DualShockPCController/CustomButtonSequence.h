@@ -6,6 +6,12 @@
 #include <map>
 #include <functional>
 
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+
 class CustomButtonSequence
 {
 public:
@@ -28,10 +34,28 @@ public:
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType);
 
 private:
+	friend class boost::serialization::access;
+
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version)
+	{
+		ar& m_customCommandNodes;
+		// TODO find a way to serialize this (cannot serialize std::function)
+		//ar& m_customCommandInfos;
+	}
+
 	struct CustomCommandNode
 	{
 		std::string actionName;
 		std::unordered_map<int, CustomCommandNode> nextNodes;
+
+		friend class boost::serialization::access;
+		template<class Archive>
+		void serialize(Archive& ar, const unsigned int version)
+		{
+			ar& actionName;
+			ar& nextNodes;
+		}
 	};
 
 	struct CustomCommandInfo

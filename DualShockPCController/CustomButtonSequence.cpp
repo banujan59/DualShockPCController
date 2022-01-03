@@ -1,5 +1,4 @@
 #include "CustomButtonSequence.h"
-
 #include "CustomButtonConfiguration.h"
 
 void CustomButtonSequence::GetActionTypeNames(std::map<CustomButtonSequence::ActionType, std::string>& container)

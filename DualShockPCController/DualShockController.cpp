@@ -1,12 +1,19 @@
 #include "DualShockController.h"
+
+#include <filesystem>
+
 #include "JoyShockLibrary.h"
 
 #include <iostream>
+#include <fstream>
 #include <random>
 #include <semaphore>
 
 namespace 
 {
+	const std::string DATA_FILENAME = "DUALSHOCKPCCONTROLLER_DATA.dat";
+
+
 	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 10;
 	constexpr int CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY = 500;
 
@@ -38,7 +45,8 @@ DualShockController::DualShockController() :
 	m_gyroControlledMouseEnabled(false)
 {
 	// Load list of available button handlers
-	m_availableButtonHandlers.push_back(DefaultConfigButtonHandler());
+	if(!LoadData())
+		m_availableButtonHandlers.push_back(DefaultConfigButtonHandler());
 
 	// Load the default button handler on startup
 	m_currentButtonHandler = &m_availableButtonHandlers[0];
@@ -63,6 +71,45 @@ DualShockController::~DualShockController()
 	}
 
 	JslDisconnectAndDisposeAll();
+}
+
+bool DualShockController::LoadData()
+{
+	if (!std::filesystem::exists(DATA_FILENAME))
+		return false;
+	try
+	{
+		std::ifstream ifs(DATA_FILENAME, std::ios::binary);
+		boost::archive::binary_iarchive ia(ifs);
+
+		ia >> m_availableButtonHandlers;
+		// archive and stream closed when destructors are called
+	}
+
+	catch(std::exception &e)
+	{
+		std::cerr << e.what() << std::endl;
+		return false;
+	}
+
+	return true;
+}
+
+void DualShockController::SaveData()
+{
+	try
+	{
+		std::ofstream ofs(DATA_FILENAME, std::ios::binary);
+		boost::archive::binary_oarchive oa(ofs);
+
+		oa << m_availableButtonHandlers;
+		// archive and stream closed when destructors are called
+	}
+
+	catch(std::exception &e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 bool DualShockController::ConnectToDevice()
@@ -214,6 +261,8 @@ void DualShockController::EnableGryoControlledMouse(bool enable)
 		JslPauseContinuousCalibration(m_nConnectedDeviceID);
 		JslResetContinuousCalibration(m_nConnectedDeviceID);
 	}
+
+	SaveData();
 }
 
 bool DualShockController::IsGyroControlledMouseEnabled() const
@@ -226,9 +275,10 @@ int DualShockController::GetMouseAccelerationFactor() const
 	return m_currentButtonHandler->GetMouseAccelerationFactor();
 }
 
-void DualShockController::SetMouseAccelerationFactor(int newFactor) const
+void DualShockController::SetMouseAccelerationFactor(int newFactor)
 {
 	m_currentButtonHandler->SetMouseAccelerationFactor(newFactor);
+	SaveData();
 }
 
 int DualShockController::GetCurrentRumbleSensitivity() const
@@ -240,6 +290,7 @@ void DualShockController::SetRumbleSensitivity(const unsigned int& newSensitivit
 {
 	m_currentButtonHandler->SetRumbleSensitivity(newSensitivity);
 	UpdateRumbleAndRandomLightColorThread();
+	SaveData();
 }
 
 void DualShockController::UpdateRumbleAndRandomLightColorThread()
@@ -287,10 +338,11 @@ bool DualShockController::GetLightBarFadeEnabled() const
 	return m_currentButtonHandler->GetLightBarFadeEnabled();
 }
 
-void DualShockController::SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const
+void DualShockController::SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue)
 {
 	m_currentButtonHandler->SetRGBLightBarColor(red, green, blue);
 	SetLightBarColor();
+	SaveData();
 }
 
 void DualShockController::SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled)
@@ -298,6 +350,7 @@ void DualShockController::SetLightBarMode(LightBarMode& lightBarMode, bool& fade
 	m_currentButtonHandler->SetLightBarMode(lightBarMode, fadeEnabled);
 	SetLightBarColor();
 	UpdateRumbleAndRandomLightColorThread();
+	SaveData();
 }
 
 void DualShockController::SetLightBarColor() const
@@ -312,9 +365,10 @@ void DualShockController::GetAllCustomCommands(std::vector<std::string>& command
 	m_currentButtonHandler->GetAllCustomCommands(commandNames, buttonList, actionType);
 }
 
-void DualShockController::RemoveCustomCommand(std::string& commandName) const
+void DualShockController::RemoveCustomCommand(std::string& commandName)
 {
 	m_currentButtonHandler->RemoveCustomCommand(commandName);
+	SaveData();
 }
 
 void DualShockController::GetCustomCommandsActions(std::map<CustomButtonSequence::ActionType, std::string>& container)
@@ -329,9 +383,11 @@ void DualShockController::GetDSButtonNames(std::map<int, std::string>& container
 
 bool DualShockController::AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,
                                               CustomButtonSequence::ActionType& actionType, std::vector<
-	                                              std::string>& actionTypeParameters) const
+	                                              std::string>& actionTypeParameters)
 {
-	return m_currentButtonHandler->AddNewCustomCommand(commmandName, buttonSequence, actionType, actionTypeParameters);
+	bool success = m_currentButtonHandler->AddNewCustomCommand(commmandName, buttonSequence, actionType, actionTypeParameters);
+	SaveData();
+	return success;
 }
 
 void DualShockController::SetDSButtonSequenceMode(bool state)

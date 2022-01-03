@@ -35,6 +35,31 @@ enum class LightBarMode
 class CustomButtonConfiguration
 {
 private:
+	/// <summary>
+	/// This constructor should not be used by the application. It is used for the serialization only.
+	/// </summary>
+	CustomButtonConfiguration() { }
+
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version)
+	{
+		// TODO find a way to serialize these fields (cannot serialize std::function)
+		//ar& m_cButtonDownFunctionMap;
+		//ar& m_cShortButtonUpFunctionMap;
+		//ar& m_cLongButtonUpFunctionMap;
+
+		ar& m_mouseAccelerationFactor;
+		ar& m_rumbleSensitivity;
+		ar& m_buttonConfigurationName;
+
+		ar& m_customButtonSequence;
+
+		ar& m_lightBarColor;
+		ar& m_lightBarFadeEnabled;
+		ar& m_lightBarMode;
+	}
+
 	static constexpr int LONG_PRESS_DURATION_THRESHOLD_MS = 250;
 
 	std::unordered_map<int, std::function<void()>> m_cButtonDownFunctionMap;
