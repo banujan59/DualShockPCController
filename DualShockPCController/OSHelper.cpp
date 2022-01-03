@@ -235,6 +235,43 @@ namespace OSHelper
 		SendInput(1, Inputs, sizeof(INPUT));
 	}
 
+	void ToggleMediaPausePlay()
+	{
+		INPUT Inputs[1];
+		Inputs[0].type = INPUT_KEYBOARD;
+		Inputs[0].ki.wVk = VK_MEDIA_PLAY_PAUSE;
+		Inputs[0].ki.dwFlags = WM_KEYUP;
+		SendInput(1, Inputs, sizeof(INPUT));
+	}
+
+	void TriggerMediaVolumeUp()
+	{
+		INPUT Inputs[1];
+		Inputs[0].type = INPUT_KEYBOARD;
+		Inputs[0].ki.wVk = VK_VOLUME_UP;
+		Inputs[0].ki.dwFlags = WM_KEYUP;
+		SendInput(1, Inputs, sizeof(INPUT));
+	}
+
+	void TriggerMediaVolumeDown()
+	{
+		INPUT Inputs[1];
+		Inputs[0].type = INPUT_KEYBOARD;
+		Inputs[0].ki.wVk = VK_VOLUME_DOWN;
+		Inputs[0].ki.dwFlags = WM_KEYUP;
+		SendInput(1, Inputs, sizeof(INPUT));
+	}
+
+	void TriggerMediaVolumeMute()
+	{
+		INPUT Inputs[1];
+		Inputs[0].type = INPUT_KEYBOARD;
+		Inputs[0].ki.wVk = VK_VOLUME_MUTE;
+		Inputs[0].ki.dwFlags = WM_KEYUP;
+		SendInput(1, Inputs, sizeof(INPUT));
+	}
+
+
 	void TriggerEnterButton()
 	{
 		INPUT Inputs[1];
@@ -306,6 +343,18 @@ namespace OSHelper
 			break;
 		case FunctionEnum::MEDIA_NEXT:
 			TriggerMediaNext();
+			break;
+		case FunctionEnum::MEDIA_PAUSE_PLAY_TOGGLE:
+			ToggleMediaPausePlay();
+			break;
+		case FunctionEnum::MEDIA_VOLUME_UP:
+			TriggerMediaVolumeUp();
+			break;
+		case FunctionEnum::MEDIA_VOLUME_DOWN:
+			TriggerMediaVolumeDown();
+			break;
+		case FunctionEnum::MEDIA_VOLUME_MUTE:
+			TriggerMediaVolumeMute();
 			break;
 		case FunctionEnum::TRIGGER_ENTER:
 			TriggerEnterButton();

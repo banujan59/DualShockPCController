@@ -43,6 +43,10 @@ namespace OSHelper
 
 	void TriggerMediaBack();
 	void TriggerMediaNext();
+	void ToggleMediaPausePlay();
+	void TriggerMediaVolumeUp();
+	void TriggerMediaVolumeDown();
+	void TriggerMediaVolumeMute();
 
 	void TriggerEnterButton();
 
@@ -70,6 +74,10 @@ namespace OSHelper
 		NAVIGATION_NEXT,
 		MEDIA_BACK,
 		MEDIA_NEXT,
+		MEDIA_PAUSE_PLAY_TOGGLE,
+		MEDIA_VOLUME_UP,
+		MEDIA_VOLUME_DOWN,
+		MEDIA_VOLUME_MUTE,
 		TRIGGER_ENTER
 	};
 
