@@ -6,11 +6,7 @@
 #include <map>
 #include "OSHelper.h"
 
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/unordered_map.hpp>
 #include <boost/serialization/map.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
 
 class CustomButtonSequence
 {
@@ -36,7 +32,6 @@ public:
 
 private:
 	friend class boost::serialization::access;
-
 	template<class Archive>
 	void serialize(Archive& ar, const unsigned int version)
 	{

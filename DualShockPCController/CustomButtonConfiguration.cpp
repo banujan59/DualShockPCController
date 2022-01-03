@@ -2,7 +2,6 @@
 
 #include <filesystem>
 #include <utility>
-#include "OSHelper.h"
 
 CustomButtonConfiguration::CustomButtonConfiguration(std::string buttonLayoutName) :
 	m_mouseAccelerationFactor(20),
@@ -135,7 +134,7 @@ void CustomButtonConfiguration::SetMouseAccelerationFactor(int newFactor)
 	m_mouseAccelerationFactor = newFactor;
 }
 
-void CustomButtonConfiguration::EnableGryoControlledMouse(bool enable)
+void CustomButtonConfiguration::SetGryoControlledMouseEnabled(bool enable)
 {
 	m_gyroControlledMouseEnabled = enable;
 }

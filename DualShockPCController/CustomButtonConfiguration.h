@@ -1,5 +1,7 @@
 #pragma once
 #include <unordered_map>
+#include <boost/serialization/unordered_map.hpp>
+
 #include "CustomButtonSequence.h"
 
 enum DualShock4Buttons
@@ -121,7 +123,7 @@ public:
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor);
 
-	void EnableGryoControlledMouse(bool enable);
+	void SetGryoControlledMouseEnabled(bool enable);
 	bool IsGyroControlledMouseEnabled() const;
 
 	int GetRumbleSensitivity() const;

@@ -21,12 +21,12 @@ void GyroMouseControlSettings::UpdateGyroControlEnabled(int state)
 {
 	if(state == 0)
 	{
-		m_pDualShockController->EnableGryoControlledMouse(false);
+		m_pDualShockController->SetGryoControlledMouseEnabled(false);
 	}
 
 	else
 	{
-		m_pDualShockController->EnableGryoControlledMouse(true);
+		m_pDualShockController->SetGryoControlledMouseEnabled(true);
 	}
 }
 

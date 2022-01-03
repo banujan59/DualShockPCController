@@ -9,10 +9,13 @@
 #include <random>
 #include <semaphore>
 
+#include <boost/serialization/vector.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+
 namespace 
 {
 	const std::string DATA_FILENAME = "DUALSHOCKPCCONTROLLER_DATA.dat";
-
 
 	constexpr int THREAD_FUNCTION_SLEEP_INTERVAL_MILLISECONDS = 10;
 	constexpr int CUSTOM_BUTTON_SEQUENCE_ACTIVATE_DELAY = 500;
@@ -251,9 +254,9 @@ std::vector<std::string> DualShockController::GetButtonConfigurationNames() cons
 	return configurationNames;
 }
 
-void DualShockController::EnableGryoControlledMouse(bool enable)
+void DualShockController::SetGryoControlledMouseEnabled(bool enable)
 {
-	m_currentButtonHandler->EnableGryoControlledMouse(enable);
+	m_currentButtonHandler->SetGryoControlledMouseEnabled(enable);
 
 	if(m_currentButtonHandler->IsGyroControlledMouseEnabled())
 	{
@@ -390,7 +393,10 @@ bool DualShockController::AddNewCustomCommand(std::string& commmandName, std::ve
 	                                              std::string>& actionTypeParameters)
 {
 	bool success = m_currentButtonHandler->AddNewCustomCommand(commmandName, buttonSequence, actionType, actionTypeParameters);
-	SaveData();
+
+	if(success)
+		SaveData();
+
 	return success;
 }
 
