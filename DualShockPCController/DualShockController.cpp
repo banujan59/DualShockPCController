@@ -372,10 +372,14 @@ void DualShockController::GetAllCustomCommands(std::vector<std::string>& command
 	m_currentButtonHandler->GetAllCustomCommands(commandNames, buttonList, actionType);
 }
 
-void DualShockController::RemoveCustomCommand(std::string& commandName)
+bool DualShockController::RemoveCustomCommand(std::string& commandName)
 {
-	m_currentButtonHandler->RemoveCustomCommand(commandName);
-	SaveData();
+	bool success = m_currentButtonHandler->RemoveCustomCommand(commandName);
+
+	if(success)
+		SaveData();
+
+	return success;
 }
 
 void DualShockController::GetCustomCommandsActions(std::map<CustomButtonSequence::ActionType, std::string>& container)

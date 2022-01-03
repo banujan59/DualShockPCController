@@ -19,7 +19,8 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    std::string RemoveRow(int row);
+    std::string GetSequenceNameFromRow(int row);
+    void RemoveRow(int row);
     void InsertRow(const std::string& sequenceName, const std::string& sequenceButton, const std::string& sequenceAction);
     bool SequenceNameExists(const std::string& nameToCheck);
 

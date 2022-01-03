@@ -141,7 +141,7 @@ public:
 	bool AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,
 	                         CustomButtonSequence::ActionType& actionType,
 	                         std::vector<std::string>& actionTypeParameters);
-	void RemoveCustomCommand(std::string& commandName);
+	bool RemoveCustomCommand(std::string& commandName);
 	static void GetDSButtonNames(std::map<int, std::string>& container);
 };
 

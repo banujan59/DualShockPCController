@@ -78,8 +78,10 @@ void ButtonLayoutSettings::HandleDeleteSequenceButtonClicked() const
 
 	if(rowToRemove != -1)
 	{
-		std::string commandNameToRemove = m_buttonSequenceTableModel->RemoveRow(rowToRemove);
-		m_pDualShockController->RemoveCustomCommand(commandNameToRemove);
+		std::string commandNameToRemove = m_buttonSequenceTableModel->GetSequenceNameFromRow(rowToRemove);
+
+		if(!commandNameToRemove.empty() && m_pDualShockController->RemoveCustomCommand(commandNameToRemove))
+			m_buttonSequenceTableModel->RemoveRow(rowToRemove);
 	}
 }
 
@@ -220,19 +222,22 @@ QVariant ButtonSequenceTableModel::headerData(int section, Qt::Orientation orien
 	return QVariant();
 }
 
-std::string ButtonSequenceTableModel::RemoveRow(int row)
+std::string ButtonSequenceTableModel::GetSequenceNameFromRow(int row)
+{
+	if (row >= 0 && row < tm_sequenceName.size())
+		return (tm_sequenceName[row]).toStdString();
+	return "";
+}
+
+void ButtonSequenceTableModel::RemoveRow(int row)
 {
 	emit beginRemoveRows(QModelIndex(), row, row);
-
-	std::string commandNameToRemove = tm_sequenceName[row].toStdString();
 
 	tm_sequenceName.remove(row);
 	tm_sequenceButton.remove(row);
 	tm_sequenceAction.remove(row);
 
 	emit endRemoveRows();
-
-	return commandNameToRemove;
 }
 
 void ButtonSequenceTableModel::InsertRow(const std::string& sequenceName, const std::string& sequenceButton, const std::string& sequenceAction)

@@ -61,7 +61,7 @@ public:
 	void SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled);
 
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType) const;
-	void RemoveCustomCommand(std::string& commandName);
+	bool RemoveCustomCommand(std::string& commandName);
 	static void GetCustomCommandsActions(std::map<CustomButtonSequence::ActionType, std::string>& container);
 	static void GetDSButtonNames(std::map<int, std::string>& container);
 	bool AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,

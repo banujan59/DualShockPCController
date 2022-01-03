@@ -241,9 +241,9 @@ bool CustomButtonConfiguration::AddNewCustomCommand(std::string& commmandName, s
 	}
 }
 
-void CustomButtonConfiguration::RemoveCustomCommand(std::string& commandName)
+bool CustomButtonConfiguration::RemoveCustomCommand(std::string& commandName)
 {
-	m_customButtonSequence.DeleteCommand(commandName);
+	return m_customButtonSequence.DeleteCommand(commandName);
 }
 
 void CustomButtonConfiguration::GetDSButtonNames(std::map<int, std::string>& container)
