@@ -15,8 +15,6 @@ private:
 	int m_previousIterationButtonDown;
 	int m_timeButtonSpentDown;
 
-	bool m_gyroControlledMouseEnabled;
-
 	CustomButtonConfiguration* m_currentButtonHandler;
 	std::vector<CustomButtonConfiguration> m_availableButtonHandlers;
 

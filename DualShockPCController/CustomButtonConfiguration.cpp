@@ -6,6 +6,7 @@
 
 CustomButtonConfiguration::CustomButtonConfiguration(std::string buttonLayoutName) :
 	m_mouseAccelerationFactor(20),
+	m_gyroControlledMouseEnabled(false),
 	m_rumbleSensitivity(0),
 	m_buttonConfigurationName(std::move(buttonLayoutName)),
 	m_customButtonSequenceModeEnabled(false),
@@ -132,6 +133,16 @@ int CustomButtonConfiguration::GetMouseAccelerationFactor() const
 void CustomButtonConfiguration::SetMouseAccelerationFactor(int newFactor)
 {
 	m_mouseAccelerationFactor = newFactor;
+}
+
+void CustomButtonConfiguration::EnableGryoControlledMouse(bool enable)
+{
+	m_gyroControlledMouseEnabled = enable;
+}
+
+bool CustomButtonConfiguration::IsGyroControlledMouseEnabled() const
+{
+	return m_gyroControlledMouseEnabled;
 }
 
 int CustomButtonConfiguration::GetRumbleSensitivity() const

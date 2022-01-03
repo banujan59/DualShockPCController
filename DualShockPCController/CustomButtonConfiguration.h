@@ -46,6 +46,7 @@ private:
 		m_lightBarColor = 0;
 		m_lightBarMode = LightBarMode::SINGLE_COLOR;
 		m_customButtonSequenceModeEnabled = false;
+		m_gyroControlledMouseEnabled = false;
 	}
 
 	friend class boost::serialization::access;
@@ -57,6 +58,7 @@ private:
 		ar& m_cLongButtonUpFunctionMap;
 
 		ar& m_mouseAccelerationFactor;
+		ar& m_gyroControlledMouseEnabled;
 		ar& m_rumbleSensitivity;
 		ar& m_buttonConfigurationName;
 
@@ -74,6 +76,7 @@ private:
 	std::unordered_map<int, OSHelper::FunctionEnum> m_cLongButtonUpFunctionMap;
 
 	int m_mouseAccelerationFactor;
+	bool m_gyroControlledMouseEnabled;
 	unsigned int m_rumbleSensitivity;
 	std::string m_buttonConfigurationName;
 
@@ -117,6 +120,9 @@ public:
 
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor);
+
+	void EnableGryoControlledMouse(bool enable);
+	bool IsGyroControlledMouseEnabled() const;
 
 	int GetRumbleSensitivity() const;
 	void SetRumbleSensitivity(const unsigned int& newSensitivity);

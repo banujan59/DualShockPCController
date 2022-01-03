@@ -41,8 +41,7 @@ DualShockController::DualShockController() :
 	m_pCaptureDSEventThread(nullptr),
 	m_pRumbleAndRandomColorThread(nullptr),
 	m_previousIterationButtonDown(0),
-	m_timeButtonSpentDown(0),
-	m_gyroControlledMouseEnabled(false)
+	m_timeButtonSpentDown(0)
 {
 	// Load list of available button handlers
 	if(!LoadData())
@@ -155,7 +154,7 @@ void DualShockController::_CaptureEvents()
 		// Update mouse position
 		m_currentButtonHandler->UpdateMousePosWithJoySticks(joyState.stickLX, joyState.stickLY);
 
-		if(m_gyroControlledMouseEnabled)
+		if(m_currentButtonHandler->IsGyroControlledMouseEnabled())
 		{
 			const IMU_STATE  imuState = JslGetIMUState(m_nConnectedDeviceID);
 			CustomButtonConfiguration::UpdateMouseWIthGyro(imuState.gyroX, imuState.gyroY);
@@ -250,8 +249,9 @@ std::vector<std::string> DualShockController::GetButtonConfigurationNames() cons
 
 void DualShockController::EnableGryoControlledMouse(bool enable)
 {
-	m_gyroControlledMouseEnabled = enable;
-	if(m_gyroControlledMouseEnabled)
+	m_currentButtonHandler->EnableGryoControlledMouse(enable);
+
+	if(m_currentButtonHandler->IsGyroControlledMouseEnabled())
 	{
 		JslStartContinuousCalibration(m_nConnectedDeviceID);
 	}
@@ -267,7 +267,7 @@ void DualShockController::EnableGryoControlledMouse(bool enable)
 
 bool DualShockController::IsGyroControlledMouseEnabled() const
 {
-	return m_gyroControlledMouseEnabled;
+	return m_currentButtonHandler->IsGyroControlledMouseEnabled();
 }
 
 int DualShockController::GetMouseAccelerationFactor() const
