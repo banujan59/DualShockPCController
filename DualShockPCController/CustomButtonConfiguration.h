@@ -1,6 +1,5 @@
 #pragma once
 #include <unordered_map>
-#include <functional>
 #include "CustomButtonSequence.h"
 
 enum DualShock4Buttons
@@ -44,10 +43,9 @@ private:
 	template<class Archive>
 	void serialize(Archive& ar, const unsigned int version)
 	{
-		// TODO find a way to serialize these fields (cannot serialize std::function)
-		//ar& m_cButtonDownFunctionMap;
-		//ar& m_cShortButtonUpFunctionMap;
-		//ar& m_cLongButtonUpFunctionMap;
+		ar& m_cButtonDownFunctionMap;
+		ar& m_cShortButtonUpFunctionMap;
+		ar& m_cLongButtonUpFunctionMap;
 
 		ar& m_mouseAccelerationFactor;
 		ar& m_rumbleSensitivity;
@@ -62,9 +60,9 @@ private:
 
 	static constexpr int LONG_PRESS_DURATION_THRESHOLD_MS = 250;
 
-	std::unordered_map<int, std::function<void()>> m_cButtonDownFunctionMap;
-	std::unordered_map<int, std::function<void()>> m_cShortButtonUpFunctionMap;
-	std::unordered_map<int, std::function<void()>> m_cLongButtonUpFunctionMap;
+	std::unordered_map<int, OSHelper::FunctionEnum> m_cButtonDownFunctionMap;
+	std::unordered_map<int, OSHelper::FunctionEnum> m_cShortButtonUpFunctionMap;
+	std::unordered_map<int, OSHelper::FunctionEnum> m_cLongButtonUpFunctionMap;
 
 	int m_mouseAccelerationFactor;
 	unsigned int m_rumbleSensitivity;
@@ -80,10 +78,10 @@ private:
 public:
 	CustomButtonConfiguration(std::string buttonLayoutName);
 
-	void AddButtonDownMapping(int button, std::function<void()> function);
-	void AddShortButtonUpMapping(int button, std::function<void()> function);
-	void AddLongButtonUpMapping(int button, std::function<void()> function);
-	void AddButtonUpMapping(int button, std::function<void()> function);
+	void AddButtonDownMapping(int button, OSHelper::FunctionEnum function);
+	void AddShortButtonUpMapping(int button, OSHelper::FunctionEnum function);
+	void AddLongButtonUpMapping(int button, OSHelper::FunctionEnum function);
+	void AddButtonUpMapping(int button, OSHelper::FunctionEnum function);
 	
 
 	/// <summary>
@@ -101,9 +99,7 @@ public:
 	void OnKeyUp(int buttons, int durationMS);
 
 	void ActivateCustomButtonSequence();
-
-
-	static void CenterMouseToScreen();
+	
 	void UpdateMousePosWithJoySticks(float stickLX, float stickLY) const;
 	void UpdateMouseScrollWithJoySticks(float stickRX, float stickRY) const;
 	static void UpdateMouseWIthGyro(float gyroX, float gyroY);

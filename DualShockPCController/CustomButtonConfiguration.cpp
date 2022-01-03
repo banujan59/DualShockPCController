@@ -15,22 +15,22 @@ CustomButtonConfiguration::CustomButtonConfiguration(std::string buttonLayoutNam
 {
 }
 
-void CustomButtonConfiguration::AddButtonDownMapping(int button, std::function<void()> function)
+void CustomButtonConfiguration::AddButtonDownMapping(int button, OSHelper::FunctionEnum function)
 {
 	m_cButtonDownFunctionMap[button] = function;
 }
 
-void CustomButtonConfiguration::AddShortButtonUpMapping(int button, std::function<void()> function)
+void CustomButtonConfiguration::AddShortButtonUpMapping(int button, OSHelper::FunctionEnum function)
 {
 	m_cShortButtonUpFunctionMap[button] = function;
 }
 
-void CustomButtonConfiguration::AddLongButtonUpMapping(int button, std::function<void()> function)
+void CustomButtonConfiguration::AddLongButtonUpMapping(int button, OSHelper::FunctionEnum function)
 {
 	m_cLongButtonUpFunctionMap[button] = function;
 }
 
-void CustomButtonConfiguration::AddButtonUpMapping(int button, std::function<void()> function)
+void CustomButtonConfiguration::AddButtonUpMapping(int button, OSHelper::FunctionEnum function)
 {
 	AddShortButtonUpMapping(button, function);
 	AddLongButtonUpMapping(button, function);
@@ -42,7 +42,7 @@ void CustomButtonConfiguration::OnKeyDown(int buttons)
 	{
 		if (m_cButtonDownFunctionMap.find(buttons) != m_cButtonDownFunctionMap.end())
 		{
-			m_cButtonDownFunctionMap[buttons]();
+			OSHelper::ExecuteOSHelperFunction(m_cButtonDownFunctionMap[buttons]);
 		}
 	}
 }
@@ -60,12 +60,12 @@ void CustomButtonConfiguration::OnKeyUp(int buttons, int durationMS)
 		{
 			if (durationMS >= LONG_PRESS_DURATION_THRESHOLD_MS && m_cLongButtonUpFunctionMap.find(buttons) != m_cLongButtonUpFunctionMap.end())
 			{
-				m_cLongButtonUpFunctionMap[buttons]();
+				OSHelper::ExecuteOSHelperFunction(m_cLongButtonUpFunctionMap[buttons]);
 			}
 
 			else if (m_cShortButtonUpFunctionMap.find(buttons) != m_cShortButtonUpFunctionMap.end())
 			{
-				m_cShortButtonUpFunctionMap[buttons]();
+				OSHelper::ExecuteOSHelperFunction(m_cShortButtonUpFunctionMap[buttons]);
 			}
 		}
 	}
@@ -84,17 +84,6 @@ void CustomButtonConfiguration::ActivateCustomButtonSequence()
 		m_customButtonSequence.ExecuteCommandAtCurrentNode();
 		m_customButtonSequence.ResetIterator();
 	}
-}
-
-void CustomButtonConfiguration::CenterMouseToScreen()
-{
-	long width, height;
-	OSHelper::GetScreenResolution(width, height);
-
-	OSHelper::MousePosition position;
-	position.x = width / 2;
-	position.y = height / 2;
-	OSHelper::SetNewMousePosition(position);
 }
 
 void CustomButtonConfiguration::UpdateMousePosWithJoySticks(float stickLX, float stickLY) const
@@ -205,7 +194,7 @@ LightBarMode CustomButtonConfiguration::GetLightBarMode()
 
 bool CustomButtonConfiguration::GetLightBarFadeEnabled()
 {
-	return m_lightBarFadeEnabled;;
+	return m_lightBarFadeEnabled;
 }
 
 void CustomButtonConfiguration::SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue)
@@ -230,23 +219,16 @@ bool CustomButtonConfiguration::AddNewCustomCommand(std::string& commmandName, s
                                                     CustomButtonSequence::ActionType& actionType,
                                                     std::vector<std::string>& actionTypeParameters)
 {
-	std::function<void()> functionToExecute;
-
 	switch (actionType)
 	{
+		OSHelper::FunctionEnum functionToExecute;
 	case CustomButtonSequence::ActionType::OPEN_FILE_OR_PROGRAM:
-		functionToExecute = [actionTypeParameters]()
-		{
-			for (std::string filesToOpen : actionTypeParameters)
-			{
-				if (std::filesystem::exists(filesToOpen))
-					OSHelper::ExecuteApplication(filesToOpen.c_str());
-			}
-		};
-		break;
-	}
+		functionToExecute = OSHelper::FunctionEnum::EXECUTE_APPLICATIONS;
+		return m_customButtonSequence.AddCommand(commmandName, buttonSequence, actionType, functionToExecute, actionTypeParameters);
 
-	return m_customButtonSequence.AddCommand(commmandName, buttonSequence, functionToExecute, actionType);
+	default:
+		return false;
+	}
 }
 
 void CustomButtonConfiguration::RemoveCustomCommand(std::string& commandName)

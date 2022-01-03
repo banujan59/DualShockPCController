@@ -1,4 +1,6 @@
 #include "OSHelper.h"
+
+#include <filesystem>
 #include <Windows.h>
 
 /*
@@ -38,6 +40,17 @@ namespace OSHelper
 		GetWindowRect(hDesktop, &desktop);
 		windowWidth = desktop.right;
 		windowHeight = desktop.bottom;
+	}
+
+	void CenterMouseToScreen()
+	{
+		long width, height;
+		GetScreenResolution(width, height);
+
+		MousePosition position;
+		position.x = width / 2;
+		position.y = height / 2;
+		SetNewMousePosition(position);
 	}
 
 	void ExecuteApplication(const char* filename)
@@ -229,5 +242,74 @@ namespace OSHelper
 		Inputs[0].ki.wVk = VK_RETURN;
 		Inputs[0].ki.dwFlags = WM_KEYUP;
 		SendInput(1, Inputs, sizeof(INPUT));
+	}
+
+
+	void ExecuteOSHelperFunction(FunctionEnum functionEnum, std::vector<std::string>* args)
+	{
+		switch (functionEnum)
+		{
+		case CENTER_MOUSE:
+			CenterMouseToScreen();
+			break;
+		case EXECUTE_APPLICATIONS:
+			if(args != nullptr)
+			{
+				for (std::string programToExecute : *args)
+				{
+					if (std::filesystem::exists(programToExecute))
+						OSHelper::ExecuteApplication(programToExecute.c_str());
+				}
+			}
+			break;
+		case MOUSE_LEFT_DOWN:
+			TriggerMouseLeftDown();
+			break;
+		case MOUSE_LEFT_UP:
+			TriggerMouseLeftUp();
+			break;
+		case MOUSE_RIGHT_DOWN:
+			TriggerMouseRightDown();
+			break;
+		case MOUSE_RIGHT_UP:
+			TriggerMouseRightUp();
+			break;
+		case TOGGLE_WINDOW_MAXIMIZE:
+			ToggleActiveWindowMaximized();
+			break;
+		case TOGGLE_WINDOW_MINIMIZE:
+			ToggleActiveWindowMinimized();
+			break;
+		case CLOSE_WINDOW:
+			CloseActiveWindow();
+			break;
+		case TRIGGER_LEFT_ARROW:
+			TriggerLeftArrowKey();
+			break;
+		case TRIGGER_UP_ARROW:
+			TriggerUpArrowKey();
+			break;
+		case TRIGGER_RIGHT_ARROW:
+			TriggerRightArrowKey();
+			break;
+		case TRIGGER_DOWN_ARROW:
+			TriggerDownArrowKey();
+			break;
+		case NAVIGATION_BACK:
+			TriggerNavigationBack();
+			break;
+		case NAVIGATION_NEXT:
+			TriggerNavigationForward();
+			break;
+		case MEDIA_BACK:
+			TriggerMediaBack();
+			break;
+		case MEDIA_NEXT:
+			TriggerMediaNext();
+			break;
+		case TRIGGER_ENTER:
+			TriggerEnterButton();
+			break;
+		}
 	}
 }
