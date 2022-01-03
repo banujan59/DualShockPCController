@@ -9,6 +9,7 @@ GyroMouseControlSettings::GyroMouseControlSettings(DualShockController* pDualSho
 		return;
 
 	ui.setupUi(this);
+	ui.gyroControlStateCheckBox->setChecked(m_pDualShockController->IsGyroControlledMouseEnabled());
 	connect(ui.gyroControlStateCheckBox, &QCheckBox::stateChanged, this, &GyroMouseControlSettings::UpdateGyroControlEnabled);
 }
 
@@ -20,12 +21,12 @@ void GyroMouseControlSettings::UpdateGyroControlEnabled(int state)
 {
 	if(state == 0)
 	{
-		m_pDualShockController->EnableGryoControlledMouse(false);
+		m_pDualShockController->SetGryoControlledMouseEnabled(false);
 	}
 
 	else
 	{
-		m_pDualShockController->EnableGryoControlledMouse(true);
+		m_pDualShockController->SetGryoControlledMouseEnabled(true);
 	}
 }
 

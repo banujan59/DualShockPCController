@@ -15,10 +15,15 @@ private:
 	int m_previousIterationButtonDown;
 	int m_timeButtonSpentDown;
 
-	bool m_gyroControlledMouseEnabled;
-
 	CustomButtonConfiguration* m_currentButtonHandler;
 	std::vector<CustomButtonConfiguration> m_availableButtonHandlers;
+
+	/// <summary>
+	/// Loads the user's previous settings
+	/// </summary>
+	/// <returns>True if the user's settings were loaded from the file, false if an error occurred</returns>
+	bool LoadData();
+	void SaveData();
 
 	void _CaptureEvents();
 	void _CaptureRumbleAndRandomLightColor() const;
@@ -39,11 +44,11 @@ public:
 
 	std::vector<std::string> GetButtonConfigurationNames() const;
 
-	void EnableGryoControlledMouse(bool enable);
+	void SetGryoControlledMouseEnabled(bool enable);
 	bool IsGyroControlledMouseEnabled() const;
 
 	int GetMouseAccelerationFactor() const;
-	void SetMouseAccelerationFactor(int newFactor) const;
+	void SetMouseAccelerationFactor(int newFactor);
 
 	int GetCurrentRumbleSensitivity() const;
 	void SetRumbleSensitivity(const unsigned int& newSensitivity);
@@ -52,16 +57,16 @@ public:
 	void GetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const;
 	LightBarMode GetLightBarMode() const;
 	bool GetLightBarFadeEnabled() const;
-	void SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue) const;
+	void SetRGBLightBarColor(uint8_t& red, uint8_t& green, uint8_t& blue);
 	void SetLightBarMode(LightBarMode& lightBarMode, bool& fadeEnabled);
 
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType) const;
-	void RemoveCustomCommand(std::string& commandName) const;
+	void RemoveCustomCommand(std::string& commandName);
 	static void GetCustomCommandsActions(std::map<CustomButtonSequence::ActionType, std::string>& container);
 	static void GetDSButtonNames(std::map<int, std::string>& container);
 	bool AddNewCustomCommand(std::string& commmandName, std::vector<int>& buttonSequence,
 	                         CustomButtonSequence::ActionType& actionType, std::vector<
-		                         std::string>& actionTypeParameters) const;
+		                         std::string>& actionTypeParameters);
 
 	void SetDSButtonSequenceMode(bool state);
 	int GetLatestButtonDown() const;

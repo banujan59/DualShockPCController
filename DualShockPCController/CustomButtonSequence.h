@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <functional>
+#include "OSHelper.h"
+
+#include <boost/serialization/map.hpp>
 
 class CustomButtonSequence
 {
@@ -15,8 +17,9 @@ public:
 
 	CustomButtonSequence();
 
-	bool AddCommand(const std::string& commandName, const std::vector<int>& buttonList, std::function<void()>& functionToExecute, const
-	                CustomButtonSequence::ActionType& actionType);
+	bool AddCommand(const std::string& commandName, const std::vector<int>& buttonList, const
+	                CustomButtonSequence::ActionType& actionType, OSHelper::FunctionEnum functionToExecute, std::vector<std::string>&
+	                actionParameters);
 	bool DeleteCommand(const std::string& commandName);
 	void IterateNext(int buttonPressed);
 
@@ -28,17 +31,44 @@ public:
 	void GetAllCustomCommands(std::vector<std::string>& commandNames, std::vector<std::string>& buttonList, std::vector<std::string>& actionType);
 
 private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version)
+	{
+		ar& m_customCommandNodes;
+		ar& m_customCommandInfos;
+	}
+
 	struct CustomCommandNode
 	{
 		std::string actionName;
 		std::unordered_map<int, CustomCommandNode> nextNodes;
+
+		friend class boost::serialization::access;
+		template<class Archive>
+		void serialize(Archive& ar, const unsigned int version)
+		{
+			ar& actionName;
+			ar& nextNodes;
+		}
 	};
 
 	struct CustomCommandInfo
 	{
 		std::vector<int> keySequence;
-		std::function<void()> functionToExecute;
+		OSHelper::FunctionEnum functionToExecute;
+		std::vector<std::string> functionToExecuteParams;
 		ActionType actionType;
+
+		friend class boost::serialization::access;
+		template<class Archive>
+		void serialize(Archive& ar, const unsigned int version)
+		{
+			ar& keySequence;
+			ar& functionToExecute;
+			ar& functionToExecuteParams;
+			ar& actionType;
+		}
 	};
 
 	CustomCommandNode* m_pNodeIterator;

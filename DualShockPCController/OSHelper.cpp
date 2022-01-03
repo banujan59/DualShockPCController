@@ -1,4 +1,6 @@
 #include "OSHelper.h"
+
+#include <filesystem>
 #include <Windows.h>
 
 /*
@@ -38,6 +40,17 @@ namespace OSHelper
 		GetWindowRect(hDesktop, &desktop);
 		windowWidth = desktop.right;
 		windowHeight = desktop.bottom;
+	}
+
+	void CenterMouseToScreen()
+	{
+		long width, height;
+		GetScreenResolution(width, height);
+
+		MousePosition position;
+		position.x = width / 2;
+		position.y = height / 2;
+		SetNewMousePosition(position);
 	}
 
 	void ExecuteApplication(const char* filename)
@@ -229,5 +242,74 @@ namespace OSHelper
 		Inputs[0].ki.wVk = VK_RETURN;
 		Inputs[0].ki.dwFlags = WM_KEYUP;
 		SendInput(1, Inputs, sizeof(INPUT));
+	}
+
+
+	void ExecuteOSHelperFunction(FunctionEnum functionEnum, std::vector<std::string>* args)
+	{
+		switch (functionEnum)
+		{
+		case FunctionEnum::CENTER_MOUSE:
+			CenterMouseToScreen();
+			break;
+		case FunctionEnum::EXECUTE_APPLICATIONS:
+			if(args != nullptr)
+			{
+				for (std::string programToExecute : *args)
+				{
+					if (std::filesystem::exists(programToExecute))
+						OSHelper::ExecuteApplication(programToExecute.c_str());
+				}
+			}
+			break;
+		case FunctionEnum::MOUSE_LEFT_DOWN:
+			TriggerMouseLeftDown();
+			break;
+		case FunctionEnum::MOUSE_LEFT_UP:
+			TriggerMouseLeftUp();
+			break;
+		case FunctionEnum::MOUSE_RIGHT_DOWN:
+			TriggerMouseRightDown();
+			break;
+		case FunctionEnum::MOUSE_RIGHT_UP:
+			TriggerMouseRightUp();
+			break;
+		case FunctionEnum::TOGGLE_WINDOW_MAXIMIZE:
+			ToggleActiveWindowMaximized();
+			break;
+		case FunctionEnum::TOGGLE_WINDOW_MINIMIZE:
+			ToggleActiveWindowMinimized();
+			break;
+		case FunctionEnum::CLOSE_WINDOW:
+			CloseActiveWindow();
+			break;
+		case FunctionEnum::TRIGGER_LEFT_ARROW:
+			TriggerLeftArrowKey();
+			break;
+		case FunctionEnum::TRIGGER_UP_ARROW:
+			TriggerUpArrowKey();
+			break;
+		case FunctionEnum::TRIGGER_RIGHT_ARROW:
+			TriggerRightArrowKey();
+			break;
+		case FunctionEnum::TRIGGER_DOWN_ARROW:
+			TriggerDownArrowKey();
+			break;
+		case FunctionEnum::NAVIGATION_BACK:
+			TriggerNavigationBack();
+			break;
+		case FunctionEnum::NAVIGATION_NEXT:
+			TriggerNavigationForward();
+			break;
+		case FunctionEnum::MEDIA_BACK:
+			TriggerMediaBack();
+			break;
+		case FunctionEnum::MEDIA_NEXT:
+			TriggerMediaNext();
+			break;
+		case FunctionEnum::TRIGGER_ENTER:
+			TriggerEnterButton();
+			break;
+		}
 	}
 }

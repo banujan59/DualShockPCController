@@ -1,5 +1,4 @@
 #include "CustomButtonSequence.h"
-
 #include "CustomButtonConfiguration.h"
 
 void CustomButtonSequence::GetActionTypeNames(std::map<CustomButtonSequence::ActionType, std::string>& container)
@@ -14,8 +13,9 @@ CustomButtonSequence::CustomButtonSequence() :
 {
 }
 
-bool CustomButtonSequence::AddCommand(const std::string& commandName, const std::vector<int>& buttonList, std::function<void()>& functionToExecute, const
-                                      CustomButtonSequence::ActionType& actionType)
+bool CustomButtonSequence::AddCommand(const std::string& commandName, const std::vector<int>& buttonList, const
+                                      CustomButtonSequence::ActionType& actionType, OSHelper::FunctionEnum functionToExecute, std::vector<std::string>&
+                                      actionParameters)
 {
 	if (buttonList.size() <= 1 || commandName.empty() || m_customCommandInfos.count(commandName) > 0)
 		return false;
@@ -48,6 +48,7 @@ bool CustomButtonSequence::AddCommand(const std::string& commandName, const std:
 	CustomCommandInfo commandInfo;
 	commandInfo.keySequence = buttonList;
 	commandInfo.functionToExecute = functionToExecute;
+	commandInfo.functionToExecuteParams = actionParameters;
 	commandInfo.actionType = actionType;
 	m_customCommandInfos[commandName] = commandInfo;
 
@@ -135,7 +136,7 @@ void CustomButtonSequence::ExecuteCommandAtCurrentNode()
 	if(CommandAvailableAtCurrentNode())
 	{
 		std::string commandName = GetCommandNameAtCurrentNode();
-		m_customCommandInfos[commandName].functionToExecute();
+		OSHelper::ExecuteOSHelperFunction(m_customCommandInfos[commandName].functionToExecute, &m_customCommandInfos[commandName].functionToExecuteParams);
 	}
 }
 

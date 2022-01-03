@@ -309,6 +309,8 @@ QVariant ButtonSequenceModel::data(const QModelIndex& index, int role) const
 	{
 		return m_selectedButtons[index.row()];
 	}
+
+	return QVariant();
 }
 
 void ButtonSequenceModel::RemoveRow(int row)

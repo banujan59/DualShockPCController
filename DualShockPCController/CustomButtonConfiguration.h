@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
-#include <functional>
+#include <boost/serialization/unordered_map.hpp>
+
 #include "CustomButtonSequence.h"
 
 enum DualShock4Buttons
@@ -35,13 +36,49 @@ enum class LightBarMode
 class CustomButtonConfiguration
 {
 private:
+	/// <summary>
+	/// This constructor should not be used by the application. It is used for the serialization only.
+	/// </summary>
+	CustomButtonConfiguration()
+	{
+		// to remove the warnings... these will be overwritten during deserialization
+		m_rumbleSensitivity = 0;
+		m_mouseAccelerationFactor = 0;
+		m_lightBarFadeEnabled = false;
+		m_lightBarColor = 0;
+		m_lightBarMode = LightBarMode::SINGLE_COLOR;
+		m_customButtonSequenceModeEnabled = false;
+		m_gyroControlledMouseEnabled = false;
+	}
+
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version)
+	{
+		ar& m_cButtonDownFunctionMap;
+		ar& m_cShortButtonUpFunctionMap;
+		ar& m_cLongButtonUpFunctionMap;
+
+		ar& m_mouseAccelerationFactor;
+		ar& m_gyroControlledMouseEnabled;
+		ar& m_rumbleSensitivity;
+		ar& m_buttonConfigurationName;
+
+		ar& m_customButtonSequence;
+
+		ar& m_lightBarColor;
+		ar& m_lightBarFadeEnabled;
+		ar& m_lightBarMode;
+	}
+
 	static constexpr int LONG_PRESS_DURATION_THRESHOLD_MS = 250;
 
-	std::unordered_map<int, std::function<void()>> m_cButtonDownFunctionMap;
-	std::unordered_map<int, std::function<void()>> m_cShortButtonUpFunctionMap;
-	std::unordered_map<int, std::function<void()>> m_cLongButtonUpFunctionMap;
+	std::unordered_map<int, OSHelper::FunctionEnum> m_cButtonDownFunctionMap;
+	std::unordered_map<int, OSHelper::FunctionEnum> m_cShortButtonUpFunctionMap;
+	std::unordered_map<int, OSHelper::FunctionEnum> m_cLongButtonUpFunctionMap;
 
 	int m_mouseAccelerationFactor;
+	bool m_gyroControlledMouseEnabled;
 	unsigned int m_rumbleSensitivity;
 	std::string m_buttonConfigurationName;
 
@@ -55,10 +92,10 @@ private:
 public:
 	CustomButtonConfiguration(std::string buttonLayoutName);
 
-	void AddButtonDownMapping(int button, std::function<void()> function);
-	void AddShortButtonUpMapping(int button, std::function<void()> function);
-	void AddLongButtonUpMapping(int button, std::function<void()> function);
-	void AddButtonUpMapping(int button, std::function<void()> function);
+	void AddButtonDownMapping(int button, OSHelper::FunctionEnum function);
+	void AddShortButtonUpMapping(int button, OSHelper::FunctionEnum function);
+	void AddLongButtonUpMapping(int button, OSHelper::FunctionEnum function);
+	void AddButtonUpMapping(int button, OSHelper::FunctionEnum function);
 	
 
 	/// <summary>
@@ -76,9 +113,7 @@ public:
 	void OnKeyUp(int buttons, int durationMS);
 
 	void ActivateCustomButtonSequence();
-
-
-	static void CenterMouseToScreen();
+	
 	void UpdateMousePosWithJoySticks(float stickLX, float stickLY) const;
 	void UpdateMouseScrollWithJoySticks(float stickRX, float stickRY) const;
 	static void UpdateMouseWIthGyro(float gyroX, float gyroY);
@@ -87,6 +122,9 @@ public:
 
 	int GetMouseAccelerationFactor() const;
 	void SetMouseAccelerationFactor(int newFactor);
+
+	void SetGryoControlledMouseEnabled(bool enable);
+	bool IsGyroControlledMouseEnabled() const;
 
 	int GetRumbleSensitivity() const;
 	void SetRumbleSensitivity(const unsigned int& newSensitivity);
