@@ -249,10 +249,10 @@ namespace OSHelper
 	{
 		switch (functionEnum)
 		{
-		case CENTER_MOUSE:
+		case FunctionEnum::CENTER_MOUSE:
 			CenterMouseToScreen();
 			break;
-		case EXECUTE_APPLICATIONS:
+		case FunctionEnum::EXECUTE_APPLICATIONS:
 			if(args != nullptr)
 			{
 				for (std::string programToExecute : *args)
@@ -262,52 +262,52 @@ namespace OSHelper
 				}
 			}
 			break;
-		case MOUSE_LEFT_DOWN:
+		case FunctionEnum::MOUSE_LEFT_DOWN:
 			TriggerMouseLeftDown();
 			break;
-		case MOUSE_LEFT_UP:
+		case FunctionEnum::MOUSE_LEFT_UP:
 			TriggerMouseLeftUp();
 			break;
-		case MOUSE_RIGHT_DOWN:
+		case FunctionEnum::MOUSE_RIGHT_DOWN:
 			TriggerMouseRightDown();
 			break;
-		case MOUSE_RIGHT_UP:
+		case FunctionEnum::MOUSE_RIGHT_UP:
 			TriggerMouseRightUp();
 			break;
-		case TOGGLE_WINDOW_MAXIMIZE:
+		case FunctionEnum::TOGGLE_WINDOW_MAXIMIZE:
 			ToggleActiveWindowMaximized();
 			break;
-		case TOGGLE_WINDOW_MINIMIZE:
+		case FunctionEnum::TOGGLE_WINDOW_MINIMIZE:
 			ToggleActiveWindowMinimized();
 			break;
-		case CLOSE_WINDOW:
+		case FunctionEnum::CLOSE_WINDOW:
 			CloseActiveWindow();
 			break;
-		case TRIGGER_LEFT_ARROW:
+		case FunctionEnum::TRIGGER_LEFT_ARROW:
 			TriggerLeftArrowKey();
 			break;
-		case TRIGGER_UP_ARROW:
+		case FunctionEnum::TRIGGER_UP_ARROW:
 			TriggerUpArrowKey();
 			break;
-		case TRIGGER_RIGHT_ARROW:
+		case FunctionEnum::TRIGGER_RIGHT_ARROW:
 			TriggerRightArrowKey();
 			break;
-		case TRIGGER_DOWN_ARROW:
+		case FunctionEnum::TRIGGER_DOWN_ARROW:
 			TriggerDownArrowKey();
 			break;
-		case NAVIGATION_BACK:
+		case FunctionEnum::NAVIGATION_BACK:
 			TriggerNavigationBack();
 			break;
-		case NAVIGATION_NEXT:
+		case FunctionEnum::NAVIGATION_NEXT:
 			TriggerNavigationForward();
 			break;
-		case MEDIA_BACK:
+		case FunctionEnum::MEDIA_BACK:
 			TriggerMediaBack();
 			break;
-		case MEDIA_NEXT:
+		case FunctionEnum::MEDIA_NEXT:
 			TriggerMediaNext();
 			break;
-		case TRIGGER_ENTER:
+		case FunctionEnum::TRIGGER_ENTER:
 			TriggerEnterButton();
 			break;
 		}

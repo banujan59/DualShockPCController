@@ -51,7 +51,7 @@ namespace OSHelper
 	/// To help with the serialization process, the controller will keep an enum to the function to execute.
 	///	This will also help with portability to Linux.
 	/// </summary>
-	enum FunctionEnum
+	enum class FunctionEnum
 	{
 		CENTER_MOUSE,
 		EXECUTE_APPLICATIONS,

@@ -37,7 +37,16 @@ private:
 	/// <summary>
 	/// This constructor should not be used by the application. It is used for the serialization only.
 	/// </summary>
-	CustomButtonConfiguration() { }
+	CustomButtonConfiguration()
+	{
+		// to remove the warnings... these will be overwritten during deserialization
+		m_rumbleSensitivity = 0;
+		m_mouseAccelerationFactor = 0;
+		m_lightBarFadeEnabled = false;
+		m_lightBarColor = 0;
+		m_lightBarMode = LightBarMode::SINGLE_COLOR;
+		m_customButtonSequenceModeEnabled = false;
+	}
 
 	friend class boost::serialization::access;
 	template<class Archive>
