@@ -20,8 +20,12 @@ namespace
 	constexpr int RUMBLE_SLEEP_DURATION_MILLISECONDS = 50;
 	std::binary_semaphore rumbleAndRandomLightColorSemaphore{ 0 };
 
-	int timeWithNoButton = 0;
+	unsigned int timeWithNoButton = 0;
 
+	/// <summary>
+	/// This boolean enables a mode where commands associated with buttons are ignored. Instead, the buttons are used to indicate the button sequence
+	///	for a custom command.
+	/// </summary>
 	bool DSButtonSequenceMode = false;
 
 	enum ControllerType
