@@ -2,7 +2,7 @@
 
 #include <thread>
 #include <QWidget>
-#include "ui_MouseSensitivitySettings.h"
+#include "ui_SensitivitySettings.h"
 #include "DualShockController.h"
 
 class RumbleSensitivtySettings : public QWidget
