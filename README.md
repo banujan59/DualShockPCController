@@ -129,6 +129,7 @@ This section is for the devs looking to improve DualShock PC Controller.
 This project has the following dependencies:
 - Qt
 - Boost
+- JoyShockLibrary (included in this repository)
 
 The Boost library is included in the VS project using an environment variable. My library was installed on separate drive. Here's how to set it up for your system (you can skip this if your Boost library is in the default include path):
 
