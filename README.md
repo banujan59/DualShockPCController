@@ -1,4 +1,18 @@
 # DualShockPCController
+
+Table of contents: 
+- [DualShockPCController](#dualshockpccontroller)
+  * [1 - Summary](#1---summary)
+  * [2 - Features](#2---features)
+    + [2.1 - Basic controls](#21---basic-controls)
+    + [2.2 - Custom commands using personalized button sequence](#22---custom-commands-using-personalized-button-sequence)
+    + [2.3 - Change controller's lightbar](#23---change-controller-s-lightbar)
+    + [2.4 - Gyro mouse control](#24---gyro-mouse-control)
+    + [2.5 - Change mouse sensitivity](#25---change-mouse-sensitivity)
+    + [2.6 - Haptic feedback](#26---haptic-feedback)
+    + [2.7 - Automatic saving](#27---automatic-saving)
+  * [3 - Dependencies](#3---dependencies)
+
 ## 1 - Summary
 This application allows you to control a PC using a DualShock 4 controller (Playstation 4 controller). The design was inspired by Grand Theft Auto V's control of a computer during a game. :) 
 
