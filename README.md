@@ -18,6 +18,8 @@ This application allows you to control a PC using a DualShock 4 controller (Play
 
 I developed this project to practice my programming skills. This project is incomplete (but still usable) and will no longer receive updates. You are welcome to clone it and improve it!
 
+Do not hesitate to contact me on [LinkedIn](http://www.linkedin.com/in/banujan-atputharajah-556498222) if you want to discuss about this project.
+
 ## 2 - Features
 Upon opening the application, DualShock PC Controller will automatically connect to the first DualShock 4 controller it finds (whether connected to bluetooth or by USB). If the application could not connect to a controller, you will see the following screen:
 
@@ -138,3 +140,5 @@ The Boost library is included in the VS project using an environment variable. M
 6. In the user variable add a new variable called "BOOST_LIB"
 7. In the variable value, type the path to the Boost libs. Should be something like "C:\Program Files\boost\boost_1_76_0\stage\lib"
 8. This project is already configured to use these variables. You should be able to compile now.
+
+You can contact me on [LinkedIn](http://www.linkedin.com/in/banujan-atputharajah-556498222) for assistance.
