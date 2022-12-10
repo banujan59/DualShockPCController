@@ -11,6 +11,7 @@ AddCustomCommandDialog::AddCustomCommandDialog(DualShockController* pDualShockCo
 		return;
 
 	ui.setupUi(this);
+	this->setWindowTitle("Add new custom command");
 
 	// populate action type
 	DualShockController::GetCustomCommandsActions(m_actionTypeNames);

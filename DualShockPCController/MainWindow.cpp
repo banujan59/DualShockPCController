@@ -24,6 +24,7 @@ MainWindow::MainWindow(DualShockController* pDualShockController, QWidget* paren
 	{
 		// UI setup
 		ui.setupUi(this);
+		setWindowTitle("Dualshock PC Controller");
 
 		ui.gridLayout->addWidget(&m_buttonLayoutSettings, 1, 0, 1, 2);
 		ui.gridLayout->addWidget(&m_lightBarColorSettings,1,3,7,2);
