@@ -143,8 +143,9 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt6::Gui> $<TARGET_FILE_DIR:${PROJECT_NAME}>/
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt6::Widgets> $<TARGET_FILE_DIR:${PROJECT_NAME}>/
     COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QT_PLUGINS_DIR}/platforms/qwindows.dll" "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QT_PLUGINS_DIR}/platforms/qwindowsd.dll" "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        "${QT_PLUGINS_DIR}/platforms/$<IF:$<CONFIG:Debug>,qwindowsd.dll,qwindows.dll>" 
+        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/bin/$<CONFIG>/qt.conf" "$<TARGET_FILE_DIR:${PROJECT_NAME}>/"
 )
 
