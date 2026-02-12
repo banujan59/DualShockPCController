@@ -16,7 +16,7 @@ Table of contents:
 ## 1 - Summary
 This application allows you to control a PC using a DualShock 4 controller (Playstation 4 controller). The design was inspired by Grand Theft Auto V's control of a computer during a game. :) 
 
-I developed this project to practice my programming skills. This project is incomplete (but still usable) and will no longer receive updates. You are welcome to clone it and improve it!
+I developed this project to practice my programming skills. You are welcome to clone it and improve it!
 
 Do not hesitate to contact me on [LinkedIn](http://www.linkedin.com/in/banujan-atputharajah-556498222) if you want to discuss about this project.
 
@@ -32,9 +32,6 @@ Otherwise, you see will the following screen with all the buttons clickable:
 
 ### 2.1 - Basic controls
 While you have the DualShock PC Controller opened, you can use the following button scheme to control your PC:
-
-X : Left mouse click
-SQUARE: 
 
 | Button  | Action  | Usage example
 |---|---| --- |
@@ -130,16 +127,5 @@ This project has the following dependencies:
 - Qt
 - Boost
 - JoyShockLibrary (included in this repository)
-
-The Boost library is included in the VS project using an environment variable. My library was installed on separate drive. Here's how to set it up for your system (you can skip this if your Boost library is in the default include path):
-
-1. Open Start menu, type "Environment Variables"
-2. Click on "Edit the system environment variables"
-3. In the advance tab, click on "Environment Variables" button
-4. In the user variable add a new variable called "BOOST_INCLUDE"
-5. In the variable value, type the path to the Boost includes. Should be something like "C:\Program Files\boost\boost_1_76_0"
-6. In the user variable add a new variable called "BOOST_LIB"
-7. In the variable value, type the path to the Boost libs. Should be something like "C:\Program Files\boost\boost_1_76_0\stage\lib"
-8. This project is already configured to use these variables. You should be able to compile now.
 
 You can contact me on [LinkedIn](http://www.linkedin.com/in/banujan-atputharajah-556498222) for assistance.
